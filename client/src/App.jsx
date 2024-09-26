@@ -1,18 +1,12 @@
-import { useState } from 'react'
-import './styles/App.css'
-
-
+import MainPage from './pages/MainPage.jsx'
+import './styles/App.css'; 
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-       <div>
-        <img className = "logo" src="logo.jpeg" alt="logo" />
-       </div>
+    <MainPage/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

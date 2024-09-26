@@ -1,0 +1,70 @@
+.topic__container{
+    margin-top: 10px    ;
+    display: flex;
+    flex-direction: row;
+    height: 450px;
+    font-family: "Nunito", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:  400;
+    font-style: normal;
+}
+.first_topic__block{
+    width: 50%;
+}
+.second_topic__block{
+    width: 50%;
+}
+.first_topic_main__text{
+    font-size: 45px;
+    font-weight:  700;
+    margin-bottom: 20px;
+
+}
+.first_topic_content__wrap{
+    width: 70%;
+    margin-left: auto;
+    margin-top: 7%;
+    margin-right: 20px;
+}
+.first_topic_secondary__text{
+    font-weight:  300;
+    margin-bottom: 40px;
+}
+.submit__btn{
+    background-color: #02adb5;
+    padding: 14px 20px;
+    border-radius: 7px;
+    border: 0;
+    color: white;
+    font-weight: 200;
+    font-size: 13px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+.submit__btn:hover{
+    box-shadow: 0 5px 10px #01bec8;
+}
+.second_topic_main__image{
+    width: 99%;
+    height: 100%;
+    border-radius: 10px;
+}
+.topic_block__container{
+    display: flex;
+    flex-direction: row;
+}
+.first_block__info{
+    width: 50%;
+    background-color: rgb(229, 229, 229);
+    margin-right: 20px;
+    padding: 15px;
+    border-radius: 10px;
+
+}
+.second_block__info{
+    width: 50%;
+    background-color: rgb(229, 229, 229);
+    padding: 15px;
+    border-radius: 10px;
+}

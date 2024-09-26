@@ -1,0 +1,72 @@
+a{
+    list-style: none;
+    text-decoration: none;
+    color: black;
+}
+/*  */
+header
+{
+    height: 150px;
+    background-color: #f4f4f4;
+    font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight:  400;
+  font-style: normal;
+}
+.top__header{
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    text-align: center;
+    align-items: center;
+    font-weight: 400;
+
+}
+.left__container, .right__container{
+    display: flex;
+    justify-content: center;
+}
+
+.right__container{
+    margin-left: auto;
+}
+.bottom__header{
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+}
+.left_nav__list,.right_nav__list{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   font-size: 20px;
+}
+.left__container{
+    margin-left:5%;
+}
+.left_nav__list li{
+margin-right: 35px;
+}
+.right_nav__list li{
+    margin-right: 35px;
+}
+.logo{
+    height: 100%;
+    width: 150px;
+}
+.top_right__list{
+    list-style: none;
+    display: flex;
+    margin-right: 15px;
+}
+.top_right__list li{
+    margin-right: 40px;
+}
+.top_left__container{
+    display: flex;
+    margin-left: 10%;
+}
+.top_right__container{
+    margin-left: auto;
+}

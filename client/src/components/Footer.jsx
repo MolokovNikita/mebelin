@@ -1,9 +1,5 @@
-import styles from '../styles/footer.module.css'
-export default function Footer(){
-    const now = new Date().getFullYear();
-    return(
-        <footer>
-            {now} all rights reserved.
-        </footer>
-    )
+import styles from "../styles/footer.module.css";
+export default function Footer() {
+  const now = new Date().getFullYear();
+  return <footer>{now} all rights reserved.</footer>;
 }

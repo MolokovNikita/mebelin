@@ -1,72 +1,89 @@
-a{
-    list-style: none;
-    text-decoration: none;
-    color: black;
+a {
+  list-style: none;
+  text-decoration: none;
+  color: black;
 }
 /*  */
-header
-{
-    height: 150px;
-    background-color: #f4f4f4;
-    font-family: "Nunito", sans-serif;
+header {
+  height: 150px;
+  background-color: #f4f4f4;
+  font-family: "Nunito", sans-serif;
   font-optical-sizing: auto;
-  font-weight:  400;
+  font-weight: 400;
   font-style: normal;
 }
-.top__header{
-    display: flex;
-    flex-direction: row;
-    height: 20%;
-    text-align: center;
-    align-items: center;
-    font-weight: 400;
+.top__header {
+  display: flex;
+  flex-direction: row;
+  height: 20%;
+  text-align: center;
+  align-items: center;
+  font-weight: 400;
+}
+.left__container,
+.right__container {
+  display: flex;
+  justify-content: center;
+}
 
+.right__container {
+  margin-left: auto;
 }
-.left__container, .right__container{
-    display: flex;
-    justify-content: center;
+.bottom__header {
+  height: 80%;
+  display: flex;
+  flex-direction: row;
 }
-
-.right__container{
-    margin-left: auto;
+.left_nav__list,
+.right_nav__list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
 }
-.bottom__header{
-    height: 80%;
-    display: flex;
-    flex-direction: row;
+.left__container {
+  margin-left: 5%;
 }
-.left_nav__list,.right_nav__list{
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   font-size: 20px;
+.left_nav__list li {
+  margin-right: 35px;
 }
-.left__container{
-    margin-left:5%;
+.right_nav__list li {
+  margin-right: 35px;
 }
-.left_nav__list li{
-margin-right: 35px;
+.logo {
+  height: 100%;
+  width: 130px;
 }
-.right_nav__list li{
-    margin-right: 35px;
+.top_right__list {
+  list-style: none;
+  display: flex;
+  margin-right: 15px;
 }
-.logo{
-    height: 100%;
-    width: 150px;
+.top_right__list li {
+  margin-right: 40px;
 }
-.top_right__list{
-    list-style: none;
-    display: flex;
-    margin-right: 15px;
+.top_left__container {
+  display: flex;
+  margin-left: 10%;
 }
-.top_right__list li{
-    margin-right: 40px;
+.top_right__container {
+  margin-left: auto;
 }
-.top_left__container{
-    display: flex;
-    margin-left: 10%;
+.catalor__item a {
+  display: flex;
+  justify-content: center;
+  padding: 5px 10px;
+  background-color: #ffc314;
+  border-radius: 17px;
 }
-.top_right__container{
-    margin-left: auto;
+.sign__item a,
+.favorite__item a,
+.basket__item a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 17px;
 }

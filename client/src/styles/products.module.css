@@ -1,0 +1,206 @@
+.category_name__title {
+  display: flex;
+  justify-content: center;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 30px;
+}
+
+.products__container {
+  width: 80%;
+  margin: 100px auto;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination button {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  margin: 0 5px;
+  margin-bottom: 50px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  border-radius: 100px;
+  transition: all 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #b9b9b938;
+}
+
+.activePage {
+  color: #ffc314;
+}
+.product__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+}
+
+.product__description {
+  display: -webkit-box; /* Для старых версий браузеров */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* Ограничение по количеству строк */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Многоточие в конце */
+  max-height: 3em; /* Высота для двух строк */
+  line-height: 1.5em; /* Высота строки, можно изменить */
+}
+.star__icon {
+  color: #e2ad0b;
+}
+.product__price {
+  display: flex;
+  justify-content: start;
+  font-weight: 700;
+  margin-bottom: 20px;
+  border-bottom: 1px solid grey;
+  font-style: normal;
+  font-size: 25px;
+}
+.product__score {
+  display: flex;
+  justify-content: start;
+  margin-top: 8px;
+  margin-left: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.product__item {
+  position: relative;
+}
+.product__item:hover {
+  scale: 102%;
+}
+.product_score__count {
+  text-decoration: underline;
+  color: grey;
+}
+.product_score__count:hover {
+  color: rgb(163, 163, 163);
+}
+.basket__button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 15px;
+  background-color: #ffc314;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+.favorites__button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.favorites__button:hover {
+  color: red;
+}
+.basket__button:hover {
+  background-color: #f6d56f;
+}
+.image__list {
+  width: 200px;
+  height: 200px;
+}
+.image__slider {
+  position: relative;
+}
+
+.product__image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.image__controls button {
+  position: absolute;
+  top: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+.image__controls button:hover {
+  color: #000;
+}
+
+.image__controls button:first-of-type {
+  left: 10px;
+}
+
+.image__controls button:last-of-type {
+  right: 10px;
+}
+
+.image__dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: grey;
+  border-radius: 50%;
+  display: inline-block;
+}
+.active__dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: rgb(167, 96, 96);
+  border-radius: 50%;
+  display: inline-block;
+}
+.active__dot {
+  background-color: #ffc314;
+}
+
+.left__arrow {
+  position: absolute;
+  left: 0;
+  top: 45%;
+  padding: 5px 0px;
+  padding-left: 10px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+.right__arrow {
+  position: absolute;
+  right: 0;
+  top: 45%;
+  padding: 5px;
+}
+.right__arrow:hover,
+.left__arrow:hover {
+  background-color: #d1d1d196;
+  border-radius: 5px;
+}

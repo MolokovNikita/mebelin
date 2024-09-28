@@ -4,9 +4,9 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
-
+import { Link } from "react-router-dom";
 export default function Header(props) {
-const{setIsOpen} =props;
+  const { setIsOpen } = props;
   return (
     <header>
       <div className={styles.top__header}>
@@ -33,44 +33,45 @@ const{setIsOpen} =props;
         </div>
       </div>
       <div className={styles.bottom__header}>
-        <a href="#">
-          <img className={styles.logo} src="logo.jpeg" />
-        </a>
+        <Link to="/">
+          <img className={styles.logo} src="/logo.jpeg" />
+        </Link>
         <div className={styles.left__container}>
           <ul className={styles.left_nav__list}>
             <li className={styles.catalor__item}>
-              <a href="#">
-                <MenuIcon />
-                Каталог
-              </a>
+              <Link to="/catalog">Каталог</Link>
             </li>
-            <li>
-              <a href="#">Скидки</a>
+            <li className={styles.sales__item}>
+              <Link to="/sales">Скидки</Link>
             </li>
-            <li>
-              <a href="#">Услуги</a>
+            <li className={styles.services__item}>
+              <Link to="/services">Услуги</Link>
             </li>
           </ul>
         </div>
         <div className={styles.right__container}>
           <ul className={styles.right_nav__list}>
             <li className={styles.favorite__item}>
-              <a href="#">
+              <Link to="/favorites">
                 <FavoriteBorderOutlinedIcon fontSize="large" />
                 Избранное
-              </a>
+              </Link>
             </li>
             <li className={styles.sign__item}>
-              <a href="#" onClick={()=>{setIsOpen(true)}}>
+              <button
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              >
                 <AccountCircleOutlinedIcon fontSize="large" />
                 Войти
-              </a>
+              </button>
             </li>
             <li className={styles.basket__item}>
-              <a href="#">
+              <Link to="/basket">
                 <ShoppingBasketOutlinedIcon fontSize="large" />
                 Корзина
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

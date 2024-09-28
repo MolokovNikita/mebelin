@@ -77,7 +77,9 @@ header {
   background-color: #ffc314;
   border-radius: 17px;
 }
-.sign__item a,
+.catalor__item a:hover {
+  background-color: #edb612;
+}
 .favorite__item a,
 .basket__item a {
   display: flex;
@@ -86,4 +88,35 @@ header {
   align-items: center;
   text-align: center;
   font-size: 17px;
+  transition: all 0.3s;
+}
+.sign__item button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 17px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.sales__item,
+.services__item {
+  transition: all 0.3s;
+  border-radius: 15px;
+}
+.sales__item:hover a,
+.services__item:hover a {
+  color: rgb(171, 171, 171);
+}
+.favorite__item a:hover {
+  color: red;
+}
+.sign__item button:hover {
+  color: #ffc314;
+}
+.basket__item a:hover {
+  color: #ffc314;
 }

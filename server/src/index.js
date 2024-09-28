@@ -5,7 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 
-
 const PORT = process.env.PORT || 5003;
 const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
@@ -20,14 +19,12 @@ app.use(
   }),
 );
 
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
 app.set("view engine", "ejs");
 app.use("", router);
-
 
 async function startApp() {
   try {

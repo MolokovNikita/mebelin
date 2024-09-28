@@ -1,0 +1,23 @@
+.grid__container {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 80px;
+  margin-bottom: 100px;
+}
+.catalog__title {
+  display: flex;
+  justify-content: center;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 30px;
+  font-style: normal;
+}
+.grid__item {
+  cursor: pointer;
+}
+
+.grid__item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Добавляем тень при ховере для визуального эффекта */
+}

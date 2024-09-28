@@ -10,13 +10,13 @@ const ModalRootElement = document.querySelector("#ModalAuth");
 
 export default function ModalAuth(props) {
   const { isOpen, onClose } = props;
-//   const { handleSignIn, handleSignUp, erorText, setErrorText } =
-//     useContext(AuthContext);
+  //   const { handleSignIn, handleSignUp, erorText, setErrorText } =
+  //     useContext(AuthContext);
   const [isLoginSelected, setIsLoginSelected] = useState(true);
   const element = useMemo(() => document.createElement("div"), []);
   const modalRef = useRef(null);
-//   const location = useLocation();
-//   const navigate = useNavigate();
+  //   const location = useLocation();
+  //   const navigate = useNavigate();
 
   const handleNavigation = (path, hash) => {
     if (location.pathname !== path) {
@@ -126,27 +126,27 @@ export default function ModalAuth(props) {
 
   if (!isOpen) return null;
 
-//   const handleRegistration = (event) => {
-//     event.preventDefault();
-//     if (nameError || emailError || passwordError || passwordMatchError) {
-//       return;
-//     } else {
-//       const f_name = name;
-//       const pass = password;
-//       handleSignUp([{ f_name, email, pass }, onClose]);
-//     }
-//   };
+  //   const handleRegistration = (event) => {
+  //     event.preventDefault();
+  //     if (nameError || emailError || passwordError || passwordMatchError) {
+  //       return;
+  //     } else {
+  //       const f_name = name;
+  //       const pass = password;
+  //       handleSignUp([{ f_name, email, pass }, onClose]);
+  //     }
+  //   };
 
-//   const handleLogin = (event) => {
-//     event.preventDefault();
-//     if (loginEmailError || loginPasswordError) {
-//       return;
-//     } else {
-//       const email = loginEmail;
-//       const pass = loginPassword;
-//       handleSignIn([{ email, pass }, onClose]);
-//     }
-//   };
+  //   const handleLogin = (event) => {
+  //     event.preventDefault();
+  //     if (loginEmailError || loginPasswordError) {
+  //       return;
+  //     } else {
+  //       const email = loginEmail;
+  //       const pass = loginPassword;
+  //       handleSignIn([{ email, pass }, onClose]);
+  //     }
+  //   };
 
   const handleBackgroundClick = () => {
     onClose();
@@ -174,7 +174,7 @@ export default function ModalAuth(props) {
             className={isLoginSelected ? style.selected : ""}
             onClick={() => {
               setIsLoginSelected(true);
-            //   setErrorText("");
+              //   setErrorText("");
             }}
           >
             Войти&nbsp;
@@ -184,15 +184,15 @@ export default function ModalAuth(props) {
             className={!isLoginSelected ? style.selected : ""}
             onClick={() => {
               setIsLoginSelected(false);
-            //   setErrorText("");
+              //   setErrorText("");
             }}
           >
             &nbsp;Регистрация
           </a>
         </div>
         {isLoginSelected ? (
-          <form className={style.login_form__container}> 
-          {/* onSubmit={handleLogin}  */}
+          <form className={style.login_form__container}>
+            {/* onSubmit={handleLogin}  */}
             <div className={style.Email_area_container}>
               <div className={style.inputWrapper}>
                 <input
@@ -234,7 +234,7 @@ export default function ModalAuth(props) {
               <a
                 onClick={() => {
                   onClose();
-                //   handleNavigation("/account/password");
+                  //   handleNavigation("/account/password");
                 }}
               >
                 Забыли пароль ?
@@ -378,9 +378,7 @@ export default function ModalAuth(props) {
                 Зарегистрироваться
               </button>
             </div>
-            <div className={style.Error_text}>
-                {/* {erorText} */}
-                </div>
+            <div className={style.Error_text}>{/* {erorText} */}</div>
           </form>
         )}
       </div>

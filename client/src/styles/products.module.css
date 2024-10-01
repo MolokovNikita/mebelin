@@ -60,7 +60,8 @@
 .star__icon {
   color: #e2ad0b;
 }
-.product__price {
+.product__price,
+.product_discount__price {
   display: flex;
   justify-content: start;
   font-weight: 700;
@@ -68,6 +69,27 @@
   border-bottom: 1px solid grey;
   font-style: normal;
   font-size: 25px;
+}
+.price__without_discount {
+  display: flex;
+  margin-left: 10px;
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: gray;
+  font-weight: 300;
+  text-decoration: line-through;
+}
+.sales__badge {
+  position: absolute;
+  top: 10px;
+  background-color: #ffc314;
+  font-weight: 700;
+  font-size: 20px;
+
+  border-radius: 15px;
+  padding: 0px 5px;
 }
 .product__score {
   display: flex;
@@ -163,9 +185,9 @@
 }
 
 .dot {
-  height: 10px;
-  width: 10px;
-  margin: 0 5px;
+  height: 7px;
+  width: 7px;
+  margin: 0 3px;
   background-color: grey;
   border-radius: 50%;
   display: inline-block;
@@ -174,14 +196,10 @@
   height: 10px;
   width: 10px;
   margin: 0 5px;
-  background-color: rgb(167, 96, 96);
+  background-color: #ffc314;
   border-radius: 50%;
   display: inline-block;
 }
-.active__dot {
-  background-color: #ffc314;
-}
-
 .left__arrow {
   position: absolute;
   left: 0;

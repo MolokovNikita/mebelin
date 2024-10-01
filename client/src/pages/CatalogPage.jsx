@@ -61,7 +61,11 @@ export default function CatalogPage() {
                   <img
                     src={productType.photo}
                     alt={productType.name}
-                    style={{ width: "200px", height: "200px" }}
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      objectFit: "contain",
+                    }}
                   />
                   <h3>{productType.name}</h3>
                 </Item>

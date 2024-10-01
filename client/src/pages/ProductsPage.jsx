@@ -8,23 +8,26 @@ import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Link } from "react-router-dom";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsImagesDetail, setProductsImagesDetail] = useState([]);
+
   const productsPerPage = 12;
 
   const [favorites, setFavorites] = useState([]);
   const [cart, setCart] = useState([]);
+
   const [currentImageIndices, setCurrentImageIndices] = useState({});
+  const [productsImagesDetail, setProductsImagesDetail] = useState([]);
 
   const { category } = useParams();
   const location = useLocation();
   const [categoryName, setCategoryName] = useState(location.state?.name || "");
 
   useEffect(() => {
-    const generatedProducts = Array.from({ length: 50 }, (_, index) => ({
+    const generatedProducts = Array.from({ length: 2 }, (_, index) => ({
       id: index + 1,
       pictures: [
         `/products_images/chair_${index + 1}/01.png`,
@@ -32,6 +35,7 @@ export default function ProductsPage() {
         `/products_images/chair_${index + 1}/03.png`,
         `/products_images/chair_${index + 1}/04.png`,
       ],
+      discount: 0.5,
       name_tovara: `Стул фишер`,
       price: 2500,
       score: 0,
@@ -94,12 +98,18 @@ export default function ProductsPage() {
     setProductsImagesDetail(imagesDetails);
   }, [products, currentPage]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.cancelBubble = true;
     setCart([...cart, product]);
     alert(`${product.name_tovara} добавлен в корзину`);
   };
 
-  const addToFavorites = (product) => {
+  const addToFavorites = (product, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.cancelBubble = true;
     setFavorites([...favorites, product]);
     alert(`${product.name_tovara} добавлен в избранное`);
   };
@@ -108,8 +118,10 @@ export default function ProductsPage() {
   const totalPages = Math.ceil(products.length / productsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  const handlePrevImage = (productId) => {
-    console.log(productId);
+  const handlePrevImage = (productId, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.cancelBubble = true;
     const currentIndex = currentImageIndices[productId] || 0;
     const productDetails = productsImagesDetail.find(
       (item) => item.product === productId,
@@ -124,17 +136,15 @@ export default function ProductsPage() {
         ...prevIndices,
         [productId]: prevIndex,
       }));
-
-      console.log(
-        `Previous image index for product ${productId}: ${prevIndex + 1} `,
-      );
     } else {
-      console.log(`Product with ID ${productId} not found.`);
+      return;
     }
   };
 
-  const handleNextImage = (productId) => {
-    console.log(productId);
+  const handleNextImage = (productId, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.cancelBubble = true;
     const currentIndex = currentImageIndices[productId] || 0;
     const productDetails = productsImagesDetail.find(
       (item) => item.product === productId,
@@ -149,15 +159,10 @@ export default function ProductsPage() {
         ...prevIndices,
         [productId]: nextIndex,
       }));
-
-      console.log(
-        `Next image index for product ${productId}: ${nextIndex + 1} `,
-      );
     } else {
-      console.log(`Product with ID ${productId} not found.`);
+      return;
     }
   };
-
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "white",
     cursor: "pointer",
@@ -171,7 +176,6 @@ export default function ProductsPage() {
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     },
   }));
-
   return (
     <>
       <div className={styles.category_name__title}>{categoryName}</div>
@@ -183,59 +187,97 @@ export default function ProductsPage() {
           )
           .map((product) => (
             <Grid size={3} key={product.id}>
-              <Item className={styles.product__item}>
-                <div className={styles.image__slider}>
-                  <ArrowBackIosIcon
-                    className={styles.left__arrow}
-                    onClick={() => handlePrevImage(product.id)}
-                  />
-                  <img
-                    className={styles.product__image}
-                    src={product.pictures[currentImageIndices[product.id] || 0]}
-                    alt={`${product.name_tovara}`}
-                  />
-                  <ArrowForwardIosIcon
-                    className={styles.right__arrow}
-                    onClick={() => handleNextImage(product.id)}
-                  />
-                </div>
-                <div className={styles.image__dots}>
-                  {product.pictures.map((_, index) => (
-                    <span
-                      key={index}
-                      className={
-                        currentImageIndices[product.id] === index
-                          ? styles.active__dot
-                          : styles.dot
+              <Link to={`/catalog/${category}/${product.id}`}>
+                <Item className={styles.product__item}>
+                  <div className={styles.image__slider}>
+                    <ArrowBackIosIcon
+                      className={styles.left__arrow}
+                      onClick={(event) => handlePrevImage(product.id, event)}
+                    />
+                    <img
+                      className={styles.product__image}
+                      src={
+                        product.pictures[currentImageIndices[product.id] || 0]
                       }
-                    ></span>
-                  ))}
-                </div>
-                <p className={styles.product__price}>{product.price} ₽</p>
-                <p className={styles.product__description}>
-                  {product.name_tovara}, {product.size}, {product.material},{" "}
-                  {product.color_tovara}, {product.fabrick}, {product.warranty}
-                </p>
-                <a className={styles.product__score}>
-                  <StarIcon className={styles.star__icon} />
-                  {product.score ? product.score : 0} | &nbsp;
-                  <p className={styles.product_score__count}>
-                    {product.scores_count ? product.scores_count : 0} отзывов
+                      alt={`${product.name_tovara}`}
+                    />
+                    <ArrowForwardIosIcon
+                      className={styles.right__arrow}
+                      onClick={(event) => handleNextImage(product.id, event)}
+                    />
+                  </div>
+                  <div className={styles.image__dots}>
+                    {product.pictures.map((_, index) => (
+                      <span
+                        key={index}
+                        className={
+                          currentImageIndices[product.id] === index
+                            ? styles.active__dot
+                            : styles.dot
+                        }
+                      ></span>
+                    ))}
+                  </div>
+                  <div
+                    className={
+                      product.discount
+                        ? styles.product_discount__price
+                        : styles.product__price
+                    }
+                  >
+                    {product.discount ? (
+                      <>
+                        <p>
+                          {product.price -
+                            product.price * product.discount +
+                            "₽"}
+                        </p>
+                        <p className={styles.price__without_discount}>
+                          {" "}
+                          {product.price} ₽
+                        </p>
+                        <p className={styles.sales__badge}>
+                          - {product.discount * 100} %
+                        </p>
+                      </>
+                    ) : (
+                      <>{product.price} ₽</>
+                    )}
+                  </div>
+
+                  <p className={styles.product__description}>
+                    {product.name_tovara}, {product.size}, {product.material},{" "}
+                    {product.color_tovara}, {product.fabrick},{" "}
+                    {product.warranty}
                   </p>
-                </a>
-                <button
-                  className={styles.basket__button}
-                  onClick={() => addToCart(product)}
-                >
-                  Добавить в корзину
-                </button>
-                <button
-                  className={styles.favorites__button}
-                  onClick={() => addToFavorites(product)}
-                >
-                  <FavoriteBorderIcon />
-                </button>
-              </Item>
+                  <div
+                    className={styles.product__score}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      event.preventDefault();
+                      event.cancelBubble = true;
+                    }}
+                  >
+                    <StarIcon className={styles.star__icon} />
+                    {product.score ? product.score : 0} | &nbsp;
+                    <p className={styles.product_score__count}>
+                      {product.scores_count ? product.scores_count : 0} отзывов
+                    </p>
+                  </div>
+                  <button
+                    className={styles.basket__button}
+                    onClick={(event) => addToCart(product, event)}
+                  >
+                    Добавить в корзину
+                  </button>
+                  <button
+                    className={styles.favorites__button}
+                    onClick={(event) => addToFavorites(product, event)}
+                  >
+                    <FavoriteBorderIcon />
+                  </button>
+                </Item>
+              </Link>
             </Grid>
           ))}
       </Grid>

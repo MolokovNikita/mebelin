@@ -1,42 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import styles from "../styles/catalog.module.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import config from "../config/config";
+
 export default function CatalogPage() {
-  const [productsTypes] = useState([
-    {
-      id: 1,
-      name: "Столы и стулья",
-      photo: "products_type_images/chair.png",
-      route: "chair",
-    },
-    {
-      id: 2,
-      name: "Кровати и матрасы",
-      photo: "products_type_images/bed.png",
-      route: "bed",
-    },
-    {
-      id: 3,
-      name: "Диваны и кресла",
-      photo: "products_type_images/sofa.png",
-      route: "sofa",
-    },
-    {
-      id: 4,
-      name: "Шкафы и стеллажи",
-      photo: "products_type_images/wardrobe.png",
-      route: "wardrobe",
-    },
-    {
-      id: 5,
-      name: "Кухонные гарнитуры",
-      photo: "products_type_images/kitchen.png",
-      route: "kitchen",
-    },
-  ]);
+  const [productsTypes, setProductsTypes] = useState([]); // done
+  useEffect(() => {
+    axios
+      .get(`${config.API_URL}/main_category`)
+      .then((res) => {
+        const resultArray = res.data.map((item) => {
+          return {
+            ...item,
+            photo: `http://localhost:5003/uploads/product_type_pictures/${item.route}.png`,
+          };
+        });
+        setProductsTypes(resultArray);
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "white",
@@ -55,19 +41,19 @@ export default function CatalogPage() {
       <div className={styles.grid__container}>
         <Grid container spacing={6}>
           {productsTypes.map((productType) => (
-            <Grid size={3} key={productType.id}>
+            <Grid size={3} key={productType.id_main_category}>
               <Link to={`/catalog/${productType.route}`}>
                 <Item className={styles.grid__item}>
                   <img
                     src={productType.photo}
-                    alt={productType.name}
+                    alt={productType.name_main_category}
                     style={{
                       width: "200px",
                       height: "200px",
                       objectFit: "contain",
                     }}
                   />
-                  <h3>{productType.name}</h3>
+                  <h3>{productType.name_main_category}</h3>
                 </Item>
               </Link>
             </Grid>

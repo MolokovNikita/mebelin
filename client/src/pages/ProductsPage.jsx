@@ -9,54 +9,108 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Link } from "react-router-dom";
+import config from "../config/config";
+import axios from "axios";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
   const productsPerPage = 12;
-
   const [favorites, setFavorites] = useState([]);
   const [cart, setCart] = useState([]);
-
   const [currentImageIndices, setCurrentImageIndices] = useState({});
-  const [productsImagesDetail, setProductsImagesDetail] = useState([]);
-
+  const [categoryName, setCategoryName] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const { category } = useParams();
   const location = useLocation();
-  const [categoryName, setCategoryName] = useState(location.state?.name || "");
+  // useEffect(()=>{
+  //   axios.get(`${config.API_URL}/reviews/2`)
+  //   .then((res)=>console.log(res)) // Запрос отзывов по id товара
+  // },[])
 
   useEffect(() => {
-    const generatedProducts = Array.from({ length: 2 }, (_, index) => ({
-      id: index + 1,
-      pictures: [
-        `/products_images/chair_${index + 1}/01.png`,
-        `/products_images/chair_${index + 1}/02.png`,
-        `/products_images/chair_${index + 1}/03.png`,
-        `/products_images/chair_${index + 1}/04.png`,
-      ],
-      discount: 0.5,
-      name_tovara: `Стул фишер`,
-      price: 2500,
-      score: 0,
-      scores_count: 0,
-      type_tovara: "Стул",
-      color_tovara: "Белый",
-      kach_tovara: "Среднее",
-      fabrick: "Химки",
-      size: "130x100x10",
-      warranty: "36 месяцев",
-      service_life: "10 лет",
-      material: "ЛДСП",
-    }));
+    setCategoryName(location.state?.name || "");
+    axios
+      .get(`${config.API_URL}/type-tovara`)
+      .then((res) => {
+        let type_tovara = "";
+        res.data.forEach((val, indx) => {
+          if (val.name_tovar === category) type_tovara = val.id_tovara;
+        });
+        const TYPE_TOVARA = type_tovara;
+        if (!TYPE_TOVARA) throw new Error("Type tovara error");
+        const fetchProducts = async () => {
+          try {
+            const response = await axios.get(`${config.API_URL}/tovar`, {
+              params: {
+                tovar_type: TYPE_TOVARA, // Используем параметр категории
+              },
+            });
+            const productsData = response.data;
 
-    setProducts(generatedProducts);
-    const initialImageIndices = generatedProducts.reduce((acc, product) => {
-      acc[product.id] = 0;
-      return acc;
-    }, {});
-    setCurrentImageIndices(initialImageIndices);
-  }, []);
+            // Для каждого товара получаем дополнительные данные
+            const detailedProducts = await Promise.all(
+              productsData.map(async (product) => {
+                const [fabricRes, kachRes, typeRes, reviewsRes] =
+                  await Promise.all([
+                    axios.get(
+                      `${config.API_URL}/fabric/${product.fabric_id_fabric}`,
+                    ),
+                    axios.get(
+                      `${config.API_URL}/kachestvo/${product.kachestvo_tovara_id_kach}`,
+                    ),
+                    axios.get(
+                      `${config.API_URL}/type-tovara/${product.type_tovara_id_tovara}`,
+                    ),
+                    axios.get(`${config.API_URL}/reviews/${product.id_tovar}`), // Запрос отзывов по id товара
+                  ]);
+                return {
+                  ...product,
+                  fabrick: fabricRes.data.adress_fabric,
+                  kach_tovara: kachRes.data.name_kach,
+                  type_tovara: typeRes.data.name_tovar,
+                  score:
+                    reviewsRes && reviewsRes.data.length > 0
+                      ? parseFloat(
+                          (
+                            reviewsRes.data.reduce((acc, val) => {
+                              const score = parseFloat(val.score);
+                              return acc + (isNaN(score) ? 0 : score);
+                            }, 0) / reviewsRes.data.length
+                          ).toFixed(1),
+                        ) || 0
+                      : 0,
+                  scores_count: reviewsRes ? reviewsRes.data.length : 0,
+                  pictures: Array.from(
+                    { length: product.pictures_count },
+                    (_, index) =>
+                      `http://localhost:5003/uploads/product_pictures/${typeRes.data.name_tovar}_${product.id_tovar}/0${index + 1}.png`,
+                  ),
+                };
+              }),
+            );
+
+            setProducts(detailedProducts);
+            setCurrentImageIndices(
+              detailedProducts.reduce((acc, product) => {
+                acc[product.id_tovar] = 0;
+                return acc;
+              }, {}),
+            );
+            setIsLoading(false);
+          } catch (error) {
+            console.error("Ошибка при загрузке товаров:", error);
+            setIsLoading(false);
+          }
+        };
+
+        fetchProducts();
+      })
+      .catch((e) => {
+        console.log(e);
+        setIsLoading(false);
+      });
+  }, [category, location.state]);
 
   useEffect(() => {
     if (!categoryName) {
@@ -82,34 +136,17 @@ export default function ProductsPage() {
     }
   }, [category, categoryName]);
 
-  useEffect(() => {
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products.slice(
-      indexOfFirstProduct,
-      indexOfLastProduct,
-    );
-
-    const imagesDetails = currentProducts.map((item) => ({
-      product: item.id,
-      id: item.id,
-    }));
-
-    setProductsImagesDetail(imagesDetails);
-  }, [products, currentPage]);
-
   const addToCart = (product, event) => {
     event.stopPropagation();
     event.preventDefault();
-    event.cancelBubble = true;
     setCart([...cart, product]);
     alert(`${product.name_tovara} добавлен в корзину`);
+    console.log(products);
   };
 
   const addToFavorites = (product, event) => {
     event.stopPropagation();
     event.preventDefault();
-    event.cancelBubble = true;
     setFavorites([...favorites, product]);
     alert(`${product.name_tovara} добавлен в избранное`);
   };
@@ -121,48 +158,33 @@ export default function ProductsPage() {
   const handlePrevImage = (productId, event) => {
     event.stopPropagation();
     event.preventDefault();
-    event.cancelBubble = true;
     const currentIndex = currentImageIndices[productId] || 0;
-    const productDetails = productsImagesDetail.find(
-      (item) => item.product === productId,
-    );
+    const totalImages =
+      products.find((item) => item.id_tovar === productId)?.pictures.length ||
+      0;
+    const prevIndex = (currentIndex - 1 + totalImages) % totalImages;
 
-    if (productDetails) {
-      const totalImages =
-        products.find((item) => item.id === productId)?.pictures.length || 0;
-      const prevIndex = (currentIndex - 1 + totalImages) % totalImages;
-
-      setCurrentImageIndices((prevIndices) => ({
-        ...prevIndices,
-        [productId]: prevIndex,
-      }));
-    } else {
-      return;
-    }
+    setCurrentImageIndices((prevIndices) => ({
+      ...prevIndices,
+      [productId]: prevIndex,
+    }));
   };
 
   const handleNextImage = (productId, event) => {
     event.stopPropagation();
     event.preventDefault();
-    event.cancelBubble = true;
     const currentIndex = currentImageIndices[productId] || 0;
-    const productDetails = productsImagesDetail.find(
-      (item) => item.product === productId,
-    );
+    const totalImages =
+      products.find((item) => item.id_tovar === productId)?.pictures.length ||
+      0;
+    const nextIndex = (currentIndex + 1) % totalImages;
 
-    if (productDetails) {
-      const totalImages =
-        products.find((item) => item.id === productId)?.pictures.length || 0;
-      const nextIndex = (currentIndex + 1) % totalImages;
-
-      setCurrentImageIndices((prevIndices) => ({
-        ...prevIndices,
-        [productId]: nextIndex,
-      }));
-    } else {
-      return;
-    }
+    setCurrentImageIndices((prevIndices) => ({
+      ...prevIndices,
+      [productId]: nextIndex,
+    }));
   };
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "white",
     cursor: "pointer",
@@ -176,119 +198,143 @@ export default function ProductsPage() {
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     },
   }));
+
   return (
     <>
       <div className={styles.category_name__title}>{categoryName}</div>
-      <Grid container spacing={6} className={styles.products__container}>
-        {products
-          .slice(
-            (currentPage - 1) * productsPerPage,
-            currentPage * productsPerPage,
-          )
-          .map((product) => (
-            <Grid size={3} key={product.id}>
-              <Link to={`/catalog/${category}/${product.id}`}>
-                <Item className={styles.product__item}>
-                  <div className={styles.image__slider}>
-                    <ArrowBackIosIcon
-                      className={styles.left__arrow}
-                      onClick={(event) => handlePrevImage(product.id, event)}
-                    />
-                    <img
-                      className={styles.product__image}
-                      src={
-                        product.pictures[currentImageIndices[product.id] || 0]
-                      }
-                      alt={`${product.name_tovara}`}
-                    />
-                    <ArrowForwardIosIcon
-                      className={styles.right__arrow}
-                      onClick={(event) => handleNextImage(product.id, event)}
-                    />
-                  </div>
-                  <div className={styles.image__dots}>
-                    {product.pictures.map((_, index) => (
-                      <span
-                        key={index}
-                        className={
-                          currentImageIndices[product.id] === index
-                            ? styles.active__dot
-                            : styles.dot
-                        }
-                      ></span>
-                    ))}
-                  </div>
-                  <div
-                    className={
-                      product.discount
-                        ? styles.product_discount__price
-                        : styles.product__price
-                    }
-                  >
-                    {product.discount ? (
-                      <>
-                        <p>
-                          {product.price -
-                            product.price * product.discount +
-                            "₽"}
+      {isLoading ? null : ( //тут может быть лоадер
+        <>
+          {products.length === 0 && !isLoading ? (
+            <>
+              <div className={styles.error__block}>
+                <span style={{ color: "red" }}>Упс, </span>&nbsp;кажется товаров
+                данной категории не существует...
+              </div>
+              <div className={styles.back_btn}>
+                <Link to="/catalog">
+                  <button>Вернуться в каталог</button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <Grid container spacing={6} className={styles.products__container}>
+              {products
+                .slice(
+                  (currentPage - 1) * productsPerPage,
+                  currentPage * productsPerPage,
+                )
+                .map((product) => (
+                  <Grid size={3} key={product.id_tovar}>
+                    <Link to={`/catalog/${category}/${product.id_tovar}`}>
+                      <Item className={styles.product__item}>
+                        <div className={styles.image__slider}>
+                          <ArrowBackIosIcon
+                            className={styles.left__arrow}
+                            onClick={(event) =>
+                              handlePrevImage(product.id_tovar, event)
+                            }
+                          />
+                          <img
+                            className={styles.product__image}
+                            src={
+                              product.pictures[
+                                currentImageIndices[product.id_tovar] || 0
+                              ]
+                            }
+                            alt={`${product.name_tovara}`}
+                          />
+                          <ArrowForwardIosIcon
+                            className={styles.right__arrow}
+                            onClick={(event) =>
+                              handleNextImage(product.id_tovar, event)
+                            }
+                          />
+                        </div>
+                        <div className={styles.image__dots}>
+                          {product.pictures.map((_, index) => (
+                            <span
+                              key={index}
+                              className={
+                                currentImageIndices[product.id_tovar] === index
+                                  ? styles.active__dot
+                                  : styles.dot
+                              }
+                            ></span>
+                          ))}
+                        </div>
+                        <div
+                          className={
+                            product.discount
+                              ? styles.product_discount__price
+                              : styles.product__price
+                          }
+                        >
+                          {product.discount ? (
+                            <>
+                              <p>
+                                {product.price -
+                                  product.price * product.discount}{" "}
+                                ₽
+                              </p>
+                              <p className={styles.price__without_discount}>
+                                {product.price} ₽
+                              </p>
+                              <p className={styles.sales__badge}>
+                                - {product.discount * 100} %
+                              </p>
+                            </>
+                          ) : (
+                            <>{product.price} ₽</>
+                          )}
+                        </div>
+                        <p className={styles.product_desc__name}>
+                          {product.name_tovar}
                         </p>
-                        <p className={styles.price__without_discount}>
-                          {" "}
-                          {product.price} ₽
+                        <p className={styles.product__description}>
+                          {product.size}, {product.material}
+                          {product.color_tovara}, {product.fabrick},{" "}
+                          {product.warranty}
                         </p>
-                        <p className={styles.sales__badge}>
-                          - {product.discount * 100} %
-                        </p>
-                      </>
-                    ) : (
-                      <>{product.price} ₽</>
-                    )}
-                  </div>
-
-                  <p className={styles.product__description}>
-                    {product.name_tovara}, {product.size}, {product.material},{" "}
-                    {product.color_tovara}, {product.fabrick},{" "}
-                    {product.warranty}
-                  </p>
-                  <div
-                    className={styles.product__score}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      event.preventDefault();
-                      event.cancelBubble = true;
-                    }}
-                  >
-                    <StarIcon className={styles.star__icon} />
-                    {product.score ? product.score : 0} | &nbsp;
-                    <p className={styles.product_score__count}>
-                      {product.scores_count ? product.scores_count : 0} отзывов
-                    </p>
-                  </div>
-                  <button
-                    className={styles.basket__button}
-                    onClick={(event) => addToCart(product, event)}
-                  >
-                    Добавить в корзину
-                  </button>
-                  <button
-                    className={styles.favorites__button}
-                    onClick={(event) => addToFavorites(product, event)}
-                  >
-                    <FavoriteBorderIcon />
-                  </button>
-                </Item>
-              </Link>
+                        <div className={styles.product__score}>
+                          <StarIcon className={styles.star__icon} />
+                          {product.score ? product.score : 0} | &nbsp;
+                          <p className={styles.product_score__count}>
+                            {product.scores_count ? product.scores_count : 0}{" "}
+                            отзывов
+                          </p>
+                        </div>
+                        <button
+                          className={styles.basket__button}
+                          onClick={(event) => addToCart(product, event)}
+                        >
+                          Добавить в корзину
+                        </button>
+                        <button
+                          className={styles.favorites__button}
+                          onClick={(event) => addToFavorites(product, event)}
+                        >
+                          <FavoriteBorderIcon />
+                        </button>
+                      </Item>
+                    </Link>
+                  </Grid>
+                ))}
             </Grid>
-          ))}
-      </Grid>
+          )}
+        </>
+      )}
       <div className={styles.pagination}>
-        {pageNumbers.map((number) => (
+        {pageNumbers.map((pageNumber) => (
           <button
-            key={number}
-            onClick={() => paginate(number)}
-            className={currentPage === number ? styles.activePage : ""}
+            key={pageNumber}
+            className={
+              currentPage === pageNumber
+                ? styles.page__button_active
+                : styles.page__button
+            }
+            onClick={() => paginate(pageNumber)}
           >
-            {number}
+            {pageNumber}
           </button>
         ))}
       </div>

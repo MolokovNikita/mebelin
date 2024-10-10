@@ -1,0 +1,34 @@
+.content__wrap {
+  display: flex;
+  flex-direction: column;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 30px;
+}
+
+.services__title {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.services__container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 40px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+}
+.services__list {
+  display: flex;
+  list-style: none;
+}
+.services__list li {
+  margin-right: 50px;
+}
+.service {
+  display: flex;
+}

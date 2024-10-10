@@ -1,9 +1,10 @@
 const express = require("express");
 const router = require("./routers/main.js");
-// const pool = require("./config/ormconfig.js");
+const pool = require("../config/bdconfig.js");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const path = require('path');
 
 const PORT = process.env.PORT || 5003;
 const app = express();
@@ -19,6 +20,11 @@ app.use(
   }),
 );
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+//http://localhost:5003/uploads/product_pictures/chair_1/01.png
+//http://localhost:5003/uploads/product_pictures/chair_1/02.png
+//и тд для доступа к картинкам на серваке где chair_(id) и /0(цифра) какой по счету является картинка
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
@@ -28,7 +34,7 @@ app.use("", router);
 
 async function startApp() {
   try {
-    // await pool.connect();
+    await pool.connect();
     console.log("Successful connection to the database");
   } catch (error) {
     console.log("Eror in connection to the database");
@@ -36,7 +42,7 @@ async function startApp() {
   }
   try {
     app.listen(PORT, () => {
-      console.log("Server started on port - ", PORT);
+    console.log("Server started on port - ", PORT);
     });
   } catch (error) {
     console.error(`Error starting the server: ${error}`);

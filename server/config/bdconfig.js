@@ -1,10 +1,10 @@
 const { Pool } = require("pg");
-require("dotenv").config({ path: "../src/Config/ormpath.env" });
+require("dotenv").config({ path: "../src/config/ormpath.env" });
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  user: 'postgres',
+  host: 'localhost',
+  database: 'mebelin',
+  password: 1234,
+  port: 5432,
 });
 module.exports = pool;

@@ -120,3 +120,40 @@ header {
 .basket__item a:hover {
   color: #ffc314;
 }
+.pop_up__bg{
+  display: none;
+  background-color: none;
+  position: absolute;
+  top: 100px;
+  right: 60px;
+  width: 200px;
+}
+.pop_up{
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  margin-top: 20px;
+}
+.auth__block:hover + .pop_up__bg{
+  display: flex;
+}
+.pop_up__bg:hover{
+  display: flex;
+}
+.pop_up__list{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.pop_up__list li {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  cursor: pointer;
+}
+.pop_up__list li:hover{
+  color: #edb612;
+}
+.logout__item{
+background-color: rgb(211, 211, 211);
+}

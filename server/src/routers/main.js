@@ -6,11 +6,12 @@ const fabricRouter = require("../routers/fabricRouter.js");
 const kachestvoTovaraRouter = require("../routers/kachestvoTovaraRoute.js");
 const productStoreAvailabillityRouter = require("../routers/productStoreAvaliability.js");
 const typeTovaraRouter = require("../routers/typeTovaraRouter.js");
-const reviewRouter = require("../routers/reviewRouter.js")
+const reviewRouter = require("../routers/reviewRouter.js");
+const authRouter = require("../routers/authRouter.js")
 //routers
 const router = express.Router();
 
-// router.use("/auth", authRouter);
+    router.use("/auth", authRouter);
     router.use("/client", clientRouter);
     router.use("/main_category", mainCategoryRouter);
     router.use("/tovar", tovarRouter);

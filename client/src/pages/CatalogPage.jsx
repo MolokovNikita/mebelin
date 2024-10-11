@@ -16,7 +16,7 @@ export default function CatalogPage() {
         const resultArray = res.data.map((item) => {
           return {
             ...item,
-            photo: `http://localhost:5003/uploads/product_type_pictures/${item.route}.png`,
+            photo: `${config.API_URL}/uploads/product_type_pictures/${item.route}.png`,
           };
         });
         setProductsTypes(resultArray);

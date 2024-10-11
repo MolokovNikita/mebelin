@@ -76,7 +76,7 @@ export default function ProductPage() {
             pictures: Array.from(
               { length: productData.pictures_count },
               (_, index) =>
-                `http://localhost:5003/uploads/product_pictures/${typeRes.data.name_tovar}_${productData.id_tovar}/0${index + 1}.png`,
+                `${config.API_URL}/uploads/product_pictures/${typeRes.data.name_tovar}_${productData.id_tovar}/0${index + 1}.png`,
             ),
           });
         } catch (error) {

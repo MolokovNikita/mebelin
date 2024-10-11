@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import styles from "../styles/header.module.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -7,6 +9,11 @@ import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { Link } from "react-router-dom";
 export default function Header(props) {
   const { setIsOpen } = props;
+  const { handleLogOut, isAuth, userData } = useContext(AuthContext);
+  const handleClose = ()=>{
+    console.log('logout')
+  handleLogOut();
+  }
   return (
     <header>
       <div className={styles.top__header}>
@@ -58,14 +65,38 @@ export default function Header(props) {
               </Link>
             </li>
             <li className={styles.sign__item}>
-              <button
-                onClick={() => {
-                  setIsOpen(true);
-                }}
-              >
-                <AccountCircleOutlinedIcon fontSize="large" />
-                Войти
-              </button>
+              
+               {isAuth? 
+               <>
+               <button className={styles.auth__block}> 
+               <AccountCircleOutlinedIcon fontSize="large" />
+               {userData.f_name}
+               </button>
+               <div className={styles.pop_up__bg}>
+                  <div className={styles.pop_up}>
+                    <ul className={styles.pop_up__list}>
+                      <li>
+                        Привет!
+                      </li>
+                      <li>
+                        Заказы
+                      </li>
+                      <li className={styles.logout__item} onClick={handleClose}>
+                        Выйти
+                      </li>
+                    </ul>
+                  </div>
+               </div>
+               </>:
+               <button
+               onClick={() => {
+                 setIsOpen(true);
+               }}
+             >
+               <AccountCircleOutlinedIcon fontSize="large" />
+               Войти
+             </button>
+               } 
             </li>
             <li className={styles.basket__item}>
               <Link to="/basket">

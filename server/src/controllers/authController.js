@@ -11,33 +11,29 @@ const COOKIE_SETTINGS = {
 class AuthController {
   static async signIn(req, res) {
     const { email, pass } = req.body;
-    const { fingerprint } = req;
     try {
       const {
         accessToken,
         refreshToken,
         accessTokenExpiration,
         id,
-        f_name,
-        l_name,
-        created,
-        deleted,
+        name_client,
+        surname_client,
         phone_number,
+        patronymic_client
       } = await AuthService.signIn({
         email,
         pass,
-        fingerprint,
       });
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
       return res.status(200).json({
         accessToken,
         accessTokenExpiration,
         id,
-        f_name,
-        l_name,
         email,
-        created,
-        deleted,
+        name_client,
+        surname_client,
+        patronymic_client,
         phone_number,
       });
     } catch (err) {
@@ -47,14 +43,12 @@ class AuthController {
 
   static async signUp(req, res) {
     const { f_name, email, pass } = req.body;
-    const { fingerprint } = req;
     try {
       const { accessToken, refreshToken, accessTokenExpiration, id } =
         await AuthService.signUp({
           f_name,
           pass,
           email,
-          fingerprint,
         });
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
       return res.status(200).json({ accessToken, accessTokenExpiration, id });
@@ -75,7 +69,6 @@ class AuthController {
   }
 
   static async refresh(req, res) {
-    const { fingerprint } = req;
     const currentRefreshToken = req.cookies.refreshToken;
     try {
       const {
@@ -83,26 +76,23 @@ class AuthController {
         refreshToken,
         accessTokenExpiration,
         id,
-        f_name,
-        l_name,
+        name_client,
+        surname_client,
+        patronymic_client,
         email,
-        created,
-        deleted,
         phone_number,
       } = await AuthService.refresh({
         currentRefreshToken,
-        fingerprint,
       });
       res.cookie("refreshToken", refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
       return res.status(200).json({
         accessToken,
         accessTokenExpiration,
         id,
-        f_name,
-        l_name,
+        name_client,
+        surname_client,
+        patronymic_client,
         email,
-        created,
-        deleted,
         phone_number,
       });
     } catch (err) {

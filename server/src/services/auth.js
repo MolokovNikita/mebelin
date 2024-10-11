@@ -6,7 +6,7 @@ const UserRepository = require("../repositories/user.js");
 const ACCESS_TOKEN_EXPIRATION = 18e5;
 
 class AuthService {
-  static async signIn({ email, pass, fingerprint }) {
+  static async signIn({ email, pass }) {
     const userData = await UserRepository.getClientData(email);
     if (!userData) {
       throw new Error("Неверный email или пароль");
@@ -15,64 +15,66 @@ class AuthService {
     if (!isPasswordValid) {
       throw new Error("Неверный email или пароль");
     }
-    const payload = { access: "client", id: userData.id, email };
+    const payload = { access: "client", id: userData.id_client, email };
     const accessToken = await TokenService.generateAccessToken(payload);
     const refreshToken = await TokenService.generateRefreshToken(payload);
 
     await RefreshSessionRepository.createRefreshSession({
-      id: userData.id,
+      id: userData.id_client,
       refreshToken,
-      fingerprint,
     });
     return {
       accessToken,
       refreshToken,
       accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-      id: userData.id,
-      f_name: userData.f_name,
-      l_name: userData.l_name,
+      id: userData.id_client,
+      name_client: userData.name_client,
+      surname_client: userData.surname_client,
+      patronymic_client: userData.patronymic_client,
       email: userData.email,
-      created: userData.created,
-      deleted: userData.deleted,
-      phone_number: userData.phone_number,
+      phone_number: userData.phone,
     };
   }
 
-  static async signUp({ f_name, pass, email, fingerprint }) {
-    const userData = await UserRepository.getClientData(email);
+  static async signUp({ f_name, pass, email }) {
+    try{
+        const userData = await UserRepository.getClientData(email);
     if (userData) {
       throw new Error("Пользователь с таким email уже существует");
     }
-
     const hashedPassword = bcrypt.hashSync(pass, 8);
-    const { id } = await UserRepository.createClient({
+    const { id_client } = await UserRepository.createClient({
       f_name,
       hashedPassword,
       email,
     });
-    const payload = { access: "client", email, id };
+    const payload = { access: "client", email, id: id_client };
     const accessToken = await TokenService.generateAccessToken(payload);
     const refreshToken = await TokenService.generateRefreshToken(payload);
     await RefreshSessionRepository.createRefreshSession({
-      id,
+        id: id_client,
       refreshToken,
-      fingerprint,
     });
     return {
       accessToken,
       refreshToken,
       accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-      id,
+      id: id_client,
       f_name,
       email,
     };
+    }
+    catch(e){
+        console.log(e);
+        throw new Error(e);
+    }
   }
 
   static async logOut(refreshToken) {
     await RefreshSessionRepository.deleteRefreshSession(refreshToken);
   }
 
-  static async refresh({ fingerprint, currentRefreshToken }) {
+  static async refresh({ currentRefreshToken }) {
     if (!currentRefreshToken) {
       throw new Error("Unauthorized");
     }
@@ -83,11 +85,6 @@ class AuthService {
       throw new Error("Unauthorized");
     }
 
-    if (refreshSession.finger_print !== fingerprint.hash) {
-      console.log("Попытка несанкционированного обновления токенов");
-      throw new Error("Попытка несанкционированного обновления токенов");
-    }
-
     await RefreshSessionRepository.deleteRefreshSession(currentRefreshToken);
     let payload;
     try {
@@ -96,31 +93,29 @@ class AuthService {
       throw new Error(error);
     }
 
-    const { id, f_name, l_name, email, created, deleted, phone_number } =
+    const { id_client, name_client, surname_client,patronymic_client, email, phone } =
       await UserRepository.getClientData(payload.email);
+      const clientData = await UserRepository.getClientData(payload.email);
 
-    const actualPayload = { access: "client", email, id };
-
+    const actualPayload = { access: "client", email, id:id_client };
     const accessToken = await TokenService.generateAccessToken(actualPayload);
     const refreshToken = await TokenService.generateRefreshToken(actualPayload);
 
     await RefreshSessionRepository.createRefreshSession({
-      id,
+      id:id_client,
       refreshToken,
-      fingerprint,
     });
-
     return {
+        ...clientData,
       accessToken,
       refreshToken,
       accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-      id,
-      f_name,
-      l_name,
+      id: id_client,
+      name_client,
+      surname_client,
+      patronymic_client,
       email,
-      created,
-      deleted,
-      phone_number,
+      phone_number: phone,
     };
   }
 }

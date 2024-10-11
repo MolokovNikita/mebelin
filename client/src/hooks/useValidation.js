@@ -36,7 +36,12 @@ export const useValidation = () => {
       setNameError("*Неккоректное имя (Пример : Иван)");
     } else if (value.length < 2) {
       setNameError("*Минимальная длина имени 2 символа");
-    } else {
+    } 
+    else if (value.length > 15)
+      {
+        setNameError("*Максимальная длина имени 15 символа");
+      }
+      else {
       setNameError("");
     }
   };
@@ -44,7 +49,8 @@ export const useValidation = () => {
   const emailHandler = (e) => {
     const value = e.target.value;
     setEmail(value);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     if (!emailRegex.test(value)) {
       setEmailError("Некорректный email, Пример: mail@example.ru");
     } else {

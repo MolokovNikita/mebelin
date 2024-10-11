@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const Forbidden = require("../utils/errors.js");
-const Unauthorized = require("../utils/errors.js");
+// const Forbidden = require("../utils/errors.js");
+// const Unauthorized = require("../utils/errors.js");
 const tokenRepository = require("../repositories/tokenRepository.js");
 dotenv.config();
 

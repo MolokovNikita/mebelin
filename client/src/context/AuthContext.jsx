@@ -1,15 +1,12 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import config from "../config/config.js";
-import useInMemoryJWT from "../hooks/inMemoryJWT.js";
-import { enqueueSnackbar } from "notistack";
-import axios from "axios";
 const ResourceClient = axios.create({
-    baseURL: `${REACT_APP_SERVER_URL}`,
+    baseURL: `${config.API_URL}`,
     withCredentials: true,
   });
   const AuthClient = axios.create({
-    baseURL: `${REACT_APP_SERVER_URL}`,
+    baseURL: `${config.API_URL}/auth`,
     withCredentials: true,
   });
 export const AuthContext = createContext({});
@@ -23,9 +20,8 @@ const AuthProvider = ({ children }) => {
     id: "",
     f_name: "",
     l_name: "",
+    p_name: "",
     email: "",
-    created: "",
-    deleted: "",
     phone_number: "",
   });
 
@@ -36,20 +32,20 @@ const AuthProvider = ({ children }) => {
     }, 5000);
   };
 
-  const handleFetchProtected = () => {
-    ResourceClient.get("/clients")
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+//   const handleFetchProtected = () => {
+//     ResourceClient.get("/clients")
+//       .then((res) => {
+//         console.log(res);
+//       })
+//       .catch((e) => {
+//         console.log(e);
+//       });
+//   };
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setIsLoading(true);
-      axios
+      AuthClient
         .post(`${config.API_URL}/auth/refresh`, null, { withCredentials: true })
         .then((res) => {
           const { accessToken, accessTokenExpiration } = res.data;
@@ -61,11 +57,10 @@ const AuthProvider = ({ children }) => {
           setUserData({
             ...userData,
             id: res.data.id,
-            f_name: res.data.f_name,
-            l_name: res.data.l_name,
+            f_name: res.data.name_client,
+            l_name: res.data.surname_client,
+            p_name: res.data.patronymic_client,
             email: res.data.email,
-            created: res.data.created,
-            deleted: res.data.deleted,
             phone_number: res.data.phone_number,
           });
           setisAuth(true);
@@ -81,7 +76,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const handleLogOut = () => {
-    AuthClient.post("auth/logout")
+    AuthClient.post("/logout")
       .then(() => {
         setisAuth(false);
         sessionStorage.clear();
@@ -90,9 +85,8 @@ const AuthProvider = ({ children }) => {
           id: "",
           f_name: "",
           l_name: "",
+          p_name: "",
           email: "",
-          created: "",
-          deleted: "",
           phone_number: "",
         });
       })
@@ -105,7 +99,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleSignUp = (data) => {
-    AuthClient.post("auth/sign-up", data[0])
+    AuthClient.post("/sign-up", data[0])
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
         window.localStorage.setItem("accessToken", accessToken);
@@ -122,29 +116,15 @@ const AuthProvider = ({ children }) => {
         sessionStorage.setItem("userId", res.data.id);
         data[1]();
         setisAuth(true);
-        enqueueSnackbar(`Вы успешно зарегистрировались!, ${data[0].f_name}!`, {
-          variant: "success",
-          autoHideDuration: 1500,
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+        alert("Вы успешно зарегались!")
       })
       .catch((e) => {
         handleError(e.response.data);
-        enqueueSnackbar(`${e.response.data}`, {
-          variant: "error",
-          autoHideDuration: 3000,
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+        alert("Произошла ошибка! - ",e.response.data);
       });
   };
   const handleSignIn = (data) => {
-    AuthClient.post("auth/sign-in", data[0])
+    AuthClient.post("/sign-in", data[0])
       .then((res) => {
         const { accessToken, accessTokenExpiration } = res.data;
         window.localStorage.setItem("accessToken", accessToken);
@@ -155,35 +135,20 @@ const AuthProvider = ({ children }) => {
         setUserData({
           ...userData,
           id: res.data.id,
-          f_name: res.data.f_name,
+          f_name: res.data.name_client,
+          l_name: res.data.surname_client,
+          p_name: res.data.patronymic_client,
           email: res.data.email,
-          l_name: res.data.l_name,
-          created: res.data.created,
-          deleted: res.data.deleted,
           phone_number: res.data.phone_number,
         });
         sessionStorage.setItem("userId", res.data.id);
         data[1]();
         setisAuth(true);
-        enqueueSnackbar(`Привет, ${res.data.f_name}!`, {
-          variant: "success",
-          autoHideDuration: 3000,
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+        alert(`Привет, ${res.data.name_client}`)
       })
       .catch((e) => {
         handleError(e.response.data);
-        enqueueSnackbar(`${e.response.data}`, {
-          variant: "error",
-          autoHideDuration: 1500,
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "right",
-          },
-        });
+       alert('Произошла ошибка!', e.response.data);
       });
   };
 
@@ -216,7 +181,7 @@ const AuthProvider = ({ children }) => {
         handleSignIn,
         handleLogOut,
         setUserData,
-        handleFetchProtected,
+        // handleFetchProtected,
         setErrorText,
       }}
     >

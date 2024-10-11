@@ -1,4 +1,4 @@
-const pool = require("../config/ormconfig");
+const pool = require("../../config/bdconfig");
 
 class RefreshSessionRepository {
   static async getRefreshSession(refreshToken) {
@@ -13,10 +13,10 @@ class RefreshSessionRepository {
     return response.rows[0];
   }
 
-  static async createRefreshSession({ id, refreshToken, fingerprint }) {
+  static async createRefreshSession({ id, refreshToken }) {
     await pool.query(
-      "INSERT INTO refresh_sessions_clients (client_id, refresh_token, finger_print) VALUES ($1, $2, $3) RETURNING *",
-      [id, refreshToken, fingerprint.hash],
+      "INSERT INTO refresh_sessions_clients (client_id, refresh_token) VALUES ($1, $2) RETURNING *",
+      [id, refreshToken],
     );
   }
 

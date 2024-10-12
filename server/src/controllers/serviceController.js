@@ -1,7 +1,7 @@
 const pool = require("../../config/bdconfig.js");
 const bcrypt = require("bcryptjs");
 const { user } = require("pg/lib/defaults.js");
-class TovarController {
+class ServiceController {
   //   async create(req, res, next) {
   //     try {
   //       const {name_main_category, route } = req.body;
@@ -24,45 +24,35 @@ class TovarController {
   //     }
   //   }
   async getAll(req, res) {
-    const { tovar_type } = req.query; // Например можно получить товар с типом - 1 - стул
-    // Например можно получить все товары с типом - 1 - стул
-    if (!tovar_type) {
-      const sql = "SELECT * FROM tovar";
-      pool.query(sql, [], (err, result) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        if (result.rows.length === 0) {
-          return res.status(404).json({ error: "Product not found" });
-        }
-        res.json(result.rows);
-      });
-    } else {
-      const sql = "SELECT * FROM tovar WHERE type_tovara_id_tovara = $1";
-      pool.query(sql, [tovar_type], (err, result) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        if (result.rows.length === 0) {
-          return res.status(404).json({ error: "Products not found" });
-        }
-        res.json(result.rows);
-      });
-    }
+    const sql = "SELECT * FROM services";
+    pool.query(sql, [], (err, result) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      res.json(result.rows);
+    });
+  }
+  async getAllById(req, res) {
+    const tovar_id = req.params.id; // Например можно получить отзывы на товар с id - 1
+    const sql = "SELECT * FROM review where tovar_id = $1";
+    pool.query(sql, [tovar_id], (err, result) => {
+      if (err) {
+        return console.error(err.message);
+      }
+
+      res.json(result.rows);
+    });
   }
   async getOne(req, res) {
-    const id_tovar = req.params.id;
-    const { tovar_type } = req.query; // Например можно получить товар с типом - 1 - стул
-    if (!tovar_type) return res.status(404).json({ error: "Tovar type error" });
-    const sql =
-      "SELECT * FROM tovar WHERE id_tovar = $1 AND type_tovara_id_tovara = $2";
-    pool.query(sql, [id_tovar, tovar_type], (err, result) => {
+    const review_id = req.params.id;
+    const sql = "SELECT * FROM review WHERE review_id = $1";
+    pool.query(sql, [review_id], (err, result) => {
       if (err) {
         console.error(err.message);
         return res.status(400).json({ error: "Invalid syntax" }); // Ошибка базы данных
       }
       if (result.rows.length === 0) {
-        return res.status(404).json({ error: "Product not found" });
+        return res.status(404).json({ error: "Fabric not found" });
       }
       res.json(result.rows[0]);
     });
@@ -103,4 +93,4 @@ class TovarController {
   //     }
   //   }
 }
-module.exports = new TovarController();
+module.exports = new ServiceController();

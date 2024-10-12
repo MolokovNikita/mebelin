@@ -102,124 +102,124 @@ class ClientController {
   //       .send("Error: Failed to delete all records! " + err.message);
   //   }
   // }
-//   async deleteOne(req, res) {
-//     const id = req.params.id;
-//     try {
-//       const result = await pool.query(`SELECT id FROM client WHERE id = $1`, [
-//         id,
-//       ]);
-//       if (result.rows.length === 0) {
-//         return res.status(400).send("Error: Client not found!");
-//       }
-//       await pool.query(`DELETE FROM client WHERE id = $1`, [id]);
-//       res.send("Your record was deleted successfully!");
-//     } catch (err) {
-//       console.error(err.message);
-//       return res
-//         .status(400)
-//         .send("Error: Failed to delete the record! " + err.message);
-//     }
-//   }
-//   async updatePassword(req, res) {
-//     const { email, pass, newpass } = req.body;
-//     const userData = await UserRepository.getClientData(email);
-//     if (!userData) {
-//       return res
-//         .status(400)
-//         .send(`("Неудалось найти пользователя с таким email!`);
-//     }
-//     const isPasswordValid = bcrypt.compareSync(pass, userData.password);
-//     if (!isPasswordValid) {
-//       return res.status(400).send("Указан неверный пароль");
-//     }
-//     const hashedPassword = bcrypt.hashSync(newpass, 8);
-//     try {
-//       await pool.query(`UPDATE client SET password = $1 WHERE email = $2`, [
-//         hashedPassword,
-//         email,
-//       ]);
-//       res.send("Password updated successfully!");
-//     } catch (e) {
-//       return res.status(400).send(`Error: Failed to update password! ${e}`);
-//     }
-//   }
-//   async recoverPassword(req, res) {
-//     const { email, pass, code } = req.body;
-//     const userData = await UserRepository.getClientData(email);
-//     if (!userData) {
-//       return res
-//         .status(400)
-//         .send(`("Неудалось найти пользователя с таким email!`);
-//     }
-//     const storedCode =
-//       await VerificationRepository.getStoredVerificationCode(email);
-//     if (!storedCode) {
-//       return res
-//         .status(400)
-//         .send(`("Неудалось найти код верификации у данного пользователя!`);
-//     }
-//     const isCodeValid = bcrypt.compareSync(code, storedCode.code);
-//     if (!isCodeValid) {
-//       return res.status(400).send("Указан неверный код");
-//     }
-//     const hashedPassword = bcrypt.hashSync(pass, 8);
-//     try {
-//       await pool.query(`UPDATE client SET password = $1 WHERE email = $2`, [
-//         hashedPassword,
-//         email,
-//       ]);
-//       await VerificationRepository.clearStoredVerificationCode(email);
-//       res.send("Пароль был успешно изменен!");
-//     } catch (e) {
-//       return res.status(400).send(`Ошибка: Не удалось поменять пароль! ${e}`);
-//     }
-//   }
-//   async update(req, res) {
-//     const { f_name, l_name, email, created, deleted, phone_number, id } =
-//       req.body;
-//     // Проверяем, есть ли клиент с указанным id
-//     const sql_exist = `SELECT id FROM client WHERE id = $1`;
-//     pool.query(sql_exist, [id], (err, result) => {
-//       if (err) {
-//         console.error(err.message);
-//         return res.status(400).send("Error: Database error! " + err.message);
-//       }
-//       if (result.rows.length === 0) {
-//         return res.status(400).send("Error: Client not found!");
-//       }
-//       // Обновляем запись клиента
-//       if (created || deleted) {
-//         const sql_update = `UPDATE client SET f_name = $1, l_name = $2, email = $3, created = $4, deleted = $5, phone_number = $6 WHERE id = $7`;
-//         pool.query(
-//           sql_update,
-//           [f_name, l_name, email, created, deleted, phone_number, id],
-//           (err, result) => {
-//             if (err) {
-//               console.error(err.message);
-//               return res
-//                 .status(400)
-//                 .send("Error: Failed to update client record! " + err.message);
-//             }
-//             res.send("Client record updated successfully!");
-//           },
-//         );
-//       } else {
-//         const sql_update = `UPDATE client SET f_name = $1, l_name = $2, email = $3, phone_number = $4 WHERE id = $5`;
-//         pool.query(
-//           sql_update,
-//           [f_name, l_name, email, phone_number, id],
-//           (err, result) => {
-//             if (err) {
-//               console.error(err.message);
-//               return res
-//                 .status(400)
-//                 .send("Error: Failed to update client record! " + err.message);
-//             }
-//             res.send("Client record updated successfully!");
-//           },
-//         );
-//       }
-//     });
-//   }
+  //   async deleteOne(req, res) {
+  //     const id = req.params.id;
+  //     try {
+  //       const result = await pool.query(`SELECT id FROM client WHERE id = $1`, [
+  //         id,
+  //       ]);
+  //       if (result.rows.length === 0) {
+  //         return res.status(400).send("Error: Client not found!");
+  //       }
+  //       await pool.query(`DELETE FROM client WHERE id = $1`, [id]);
+  //       res.send("Your record was deleted successfully!");
+  //     } catch (err) {
+  //       console.error(err.message);
+  //       return res
+  //         .status(400)
+  //         .send("Error: Failed to delete the record! " + err.message);
+  //     }
+  //   }
+  //   async updatePassword(req, res) {
+  //     const { email, pass, newpass } = req.body;
+  //     const userData = await UserRepository.getClientData(email);
+  //     if (!userData) {
+  //       return res
+  //         .status(400)
+  //         .send(`("Неудалось найти пользователя с таким email!`);
+  //     }
+  //     const isPasswordValid = bcrypt.compareSync(pass, userData.password);
+  //     if (!isPasswordValid) {
+  //       return res.status(400).send("Указан неверный пароль");
+  //     }
+  //     const hashedPassword = bcrypt.hashSync(newpass, 8);
+  //     try {
+  //       await pool.query(`UPDATE client SET password = $1 WHERE email = $2`, [
+  //         hashedPassword,
+  //         email,
+  //       ]);
+  //       res.send("Password updated successfully!");
+  //     } catch (e) {
+  //       return res.status(400).send(`Error: Failed to update password! ${e}`);
+  //     }
+  //   }
+  //   async recoverPassword(req, res) {
+  //     const { email, pass, code } = req.body;
+  //     const userData = await UserRepository.getClientData(email);
+  //     if (!userData) {
+  //       return res
+  //         .status(400)
+  //         .send(`("Неудалось найти пользователя с таким email!`);
+  //     }
+  //     const storedCode =
+  //       await VerificationRepository.getStoredVerificationCode(email);
+  //     if (!storedCode) {
+  //       return res
+  //         .status(400)
+  //         .send(`("Неудалось найти код верификации у данного пользователя!`);
+  //     }
+  //     const isCodeValid = bcrypt.compareSync(code, storedCode.code);
+  //     if (!isCodeValid) {
+  //       return res.status(400).send("Указан неверный код");
+  //     }
+  //     const hashedPassword = bcrypt.hashSync(pass, 8);
+  //     try {
+  //       await pool.query(`UPDATE client SET password = $1 WHERE email = $2`, [
+  //         hashedPassword,
+  //         email,
+  //       ]);
+  //       await VerificationRepository.clearStoredVerificationCode(email);
+  //       res.send("Пароль был успешно изменен!");
+  //     } catch (e) {
+  //       return res.status(400).send(`Ошибка: Не удалось поменять пароль! ${e}`);
+  //     }
+  //   }
+  //   async update(req, res) {
+  //     const { f_name, l_name, email, created, deleted, phone_number, id } =
+  //       req.body;
+  //     // Проверяем, есть ли клиент с указанным id
+  //     const sql_exist = `SELECT id FROM client WHERE id = $1`;
+  //     pool.query(sql_exist, [id], (err, result) => {
+  //       if (err) {
+  //         console.error(err.message);
+  //         return res.status(400).send("Error: Database error! " + err.message);
+  //       }
+  //       if (result.rows.length === 0) {
+  //         return res.status(400).send("Error: Client not found!");
+  //       }
+  //       // Обновляем запись клиента
+  //       if (created || deleted) {
+  //         const sql_update = `UPDATE client SET f_name = $1, l_name = $2, email = $3, created = $4, deleted = $5, phone_number = $6 WHERE id = $7`;
+  //         pool.query(
+  //           sql_update,
+  //           [f_name, l_name, email, created, deleted, phone_number, id],
+  //           (err, result) => {
+  //             if (err) {
+  //               console.error(err.message);
+  //               return res
+  //                 .status(400)
+  //                 .send("Error: Failed to update client record! " + err.message);
+  //             }
+  //             res.send("Client record updated successfully!");
+  //           },
+  //         );
+  //       } else {
+  //         const sql_update = `UPDATE client SET f_name = $1, l_name = $2, email = $3, phone_number = $4 WHERE id = $5`;
+  //         pool.query(
+  //           sql_update,
+  //           [f_name, l_name, email, phone_number, id],
+  //           (err, result) => {
+  //             if (err) {
+  //               console.error(err.message);
+  //               return res
+  //                 .status(400)
+  //                 .send("Error: Failed to update client record! " + err.message);
+  //             }
+  //             res.send("Client record updated successfully!");
+  //           },
+  //         );
+  //       }
+  //     });
+  //   }
 }
 module.exports = new ClientController();

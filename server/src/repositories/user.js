@@ -2,18 +2,15 @@ const pool = require("../../config/bdconfig");
 class UserRepository {
   static async createClient({ f_name, hashedPassword, email }) {
     console.log(f_name, hashedPassword, email);
-    try{
+    try {
       const response = await pool.query(
         "INSERT INTO client (name_client, password, email) VALUES ($1, $2, $3) RETURNING *",
         [f_name, hashedPassword, email],
       );
       return response.rows[0];
-    }
-    catch(e)
-    {
+    } catch (e) {
       console.log(e);
     }
-    
   }
   // static async createStaff({
   //   f_name,

@@ -36,12 +36,9 @@ export const useValidation = () => {
       setNameError("*Неккоректное имя (Пример : Иван)");
     } else if (value.length < 2) {
       setNameError("*Минимальная длина имени 2 символа");
-    } 
-    else if (value.length > 15)
-      {
-        setNameError("*Максимальная длина имени 15 символа");
-      }
-      else {
+    } else if (value.length > 15) {
+      setNameError("*Максимальная длина имени 15 символа");
+    } else {
       setNameError("");
     }
   };

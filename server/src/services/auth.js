@@ -37,36 +37,35 @@ class AuthService {
   }
 
   static async signUp({ f_name, pass, email }) {
-    try{
-        const userData = await UserRepository.getClientData(email);
-    if (userData) {
-      throw new Error("Пользователь с таким email уже существует");
-    }
-    const hashedPassword = bcrypt.hashSync(pass, 8);
-    const { id_client } = await UserRepository.createClient({
-      f_name,
-      hashedPassword,
-      email,
-    });
-    const payload = { access: "client", email, id: id_client };
-    const accessToken = await TokenService.generateAccessToken(payload);
-    const refreshToken = await TokenService.generateRefreshToken(payload);
-    await RefreshSessionRepository.createRefreshSession({
+    try {
+      const userData = await UserRepository.getClientData(email);
+      if (userData) {
+        throw new Error("Пользователь с таким email уже существует");
+      }
+      const hashedPassword = bcrypt.hashSync(pass, 8);
+      const { id_client } = await UserRepository.createClient({
+        f_name,
+        hashedPassword,
+        email,
+      });
+      const payload = { access: "client", email, id: id_client };
+      const accessToken = await TokenService.generateAccessToken(payload);
+      const refreshToken = await TokenService.generateRefreshToken(payload);
+      await RefreshSessionRepository.createRefreshSession({
         id: id_client,
-      refreshToken,
-    });
-    return {
-      accessToken,
-      refreshToken,
-      accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-      id: id_client,
-      f_name,
-      email,
-    };
-    }
-    catch(e){
-        console.log(e);
-        throw new Error(e);
+        refreshToken,
+      });
+      return {
+        accessToken,
+        refreshToken,
+        accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+        id: id_client,
+        f_name,
+        email,
+      };
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
     }
   }
 
@@ -93,20 +92,26 @@ class AuthService {
       throw new Error(error);
     }
 
-    const { id_client, name_client, surname_client,patronymic_client, email, phone } =
-      await UserRepository.getClientData(payload.email);
-      const clientData = await UserRepository.getClientData(payload.email);
+    const {
+      id_client,
+      name_client,
+      surname_client,
+      patronymic_client,
+      email,
+      phone,
+    } = await UserRepository.getClientData(payload.email);
+    const clientData = await UserRepository.getClientData(payload.email);
 
-    const actualPayload = { access: "client", email, id:id_client };
+    const actualPayload = { access: "client", email, id: id_client };
     const accessToken = await TokenService.generateAccessToken(actualPayload);
     const refreshToken = await TokenService.generateRefreshToken(actualPayload);
 
     await RefreshSessionRepository.createRefreshSession({
-      id:id_client,
+      id: id_client,
       refreshToken,
     });
     return {
-        ...clientData,
+      ...clientData,
       accessToken,
       refreshToken,
       accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,

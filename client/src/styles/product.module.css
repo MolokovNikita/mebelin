@@ -183,6 +183,31 @@
   font-weight: 500;
   cursor: pointer;
 }
+.basket__control {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: space-around;
+  border: 1px solid #ffc314;
+  border-radius: 20px;
+  align-items: center;
+}
+
+.increase__btn,
+.decrease__btn {
+  display: flex;
+  padding: 0 9px;
+  border-radius: 20px;
+  font-size: 25px;
+  cursor: pointer;
+}
+.increase__btn {
+  padding: 0 11px;
+}
+.increase__btn:hover,
+.decrease__btn:hover {
+  background-color: #ffc314;
+}
 .basket__item {
   margin-right: 10px;
 }
@@ -216,15 +241,15 @@
   height: 60px;
   list-style: none;
 }
-.select__img{
+.select__img {
   border: 1px solid rgb(184, 183, 183);
 }
-.select__img:hover{
+.select__img:hover {
   border-color: black;
 }
 .active_color {
-  border: none!important;
-  border: 1px solid rgb(0, 0, 0)!important;
+  border: none !important;
+  border: 1px solid rgb(0, 0, 0) !important;
 }
 
 .main_specifications__container {
@@ -277,11 +302,20 @@
   color: blue;
   margin-left: 20px;
 }
-.favorite__btn {
+.favorite__btn,
+.favorite__button {
+  background: none;
+  border: none;
   position: absolute;
   top: 20px;
   right: 20px;
   cursor: pointer;
+}
+.favorite__button {
+  color: red;
+}
+.favorite__button:hover {
+  color: rgb(154, 2, 2);
 }
 .favorite__btn:hover {
   color: red;
@@ -380,4 +414,13 @@
   background-color: white;
   border-radius: 15px;
   padding: 20px;
+}
+.toast_msg {
+  font-size: 15px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: black !important;
+  background-color: #ffc314 !important;
 }

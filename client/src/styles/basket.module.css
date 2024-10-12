@@ -170,10 +170,49 @@
   align-items: center;
   flex-direction: column;
 }
-.favorite__icon {
-  color: red;
+
+.favorite__btn,
+.favorite__button {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 30px;
   cursor: pointer;
 }
-.favorite__icon:hover {
-  color: rgb(169, 7, 7);
+.favorite__button {
+  color: red;
+}
+.favorite__button:hover {
+  color: rgb(154, 2, 2);
+}
+.favorite__btn:hover {
+  color: red;
+}
+.color__text {
+  font-size: 15px;
+}
+.catalog_btn__container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.catalog__btn {
+  display: flex;
+  background-color: #ffc314;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+.catalog__btn:hover {
+  background-color: #f8d56d;
+}
+
+.toast_msg {
+  font-size: 15px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: black !important;
+  background-color: #ffc314 !important;
 }

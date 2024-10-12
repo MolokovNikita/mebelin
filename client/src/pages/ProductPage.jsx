@@ -1,15 +1,20 @@
 import { useParams, useLocation, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styles from "../styles/product.module.css";
 import StarIcon from "@mui/icons-material/Star";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Rating from "@mui/material/Rating";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import axios from "axios";
 import config from "../config/config";
 import { Link } from "react-router-dom";
+import { ProductsContext } from "../context/ProductsContext";
+
 export default function ProductPage() {
   const location = useLocation();
   const { category, productID } = useParams(); // Достаем параметры из пути
@@ -17,9 +22,12 @@ export default function ProductPage() {
   const [currentImage, setCurrentImage] = useState(0); // Для смены главного изображения
   const [isFullscreen, setIsFullscreen] = useState(false); // Для управления полноэкранным режимом
   const [categoryName, setCategoryName] = useState(location.state?.name || "");
-  const [selectedColor, setSelectedColor] = useState('');
-  const [selectedColorBlur, setSelectedColorBlur] = useState('');
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedColorBlur, setSelectedColorBlur] = useState("");
   const [error, setError] = useState(false);
+  const { basket, setBasket, favoritesList, setFavoritesList } =
+    useContext(ProductsContext);
+
   useEffect(() => {
     axios.get(`${config.API_URL}/type-tovara`).then((res) => {
       let type_tovara = "";
@@ -53,7 +61,7 @@ export default function ProductPage() {
             axios.get(`${config.API_URL}/reviews/${productData.id_tovar}`), // Запрос отзывов по id товара
           ]);
           setSelectedColor(productData.color);
-          setSelectedColorBlur(productData.color)
+          setSelectedColorBlur(productData.color);
           // Устанавливаем состояние продукта
           setProduct({
             ...productData,
@@ -90,9 +98,30 @@ export default function ProductPage() {
     });
   }, [category, productID]);
 
-  // if(error){
-  //   return <Navigate to="/catalog" />;
-  // }
+  const favnotify = () =>
+    toast.success("Товар добавлен в избранное!", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      className: styles.toast_msg,
+    });
+  const basketnotify = () =>
+    toast.success("Товар добавлен в корзину!", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      className: styles.toast_msg,
+    });
   const handleImageClick = (index) => {
     setCurrentImage(index);
   };
@@ -112,6 +141,110 @@ export default function ProductPage() {
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
+  };
+  const addToCart = (product, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    basketnotify();
+    setBasket((prevBasket) => {
+      const existingProductIndex = prevBasket.findIndex(
+        (item) =>
+          item.id_tovar === product.id_tovar && item.color === selectedColor,
+      );
+      if (existingProductIndex !== -1) {
+        const updatedBasket = [...prevBasket];
+        updatedBasket[existingProductIndex].quantity += 1;
+        return updatedBasket;
+      } else {
+        return [
+          ...prevBasket,
+          { ...product, quantity: 1, color: selectedColor },
+        ];
+      }
+    });
+  };
+
+  const decreaseQuantity = (event, product) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setBasket((prevBasket) => {
+      const existingProductIndex = prevBasket.findIndex(
+        (item) =>
+          item.id_tovar === product.id_tovar && item.color === selectedColor,
+      );
+      if (existingProductIndex !== -1) {
+        const updatedBasket = [...prevBasket];
+        const newQuantity = updatedBasket[existingProductIndex].quantity - 1;
+        if (newQuantity > 0) {
+          updatedBasket[existingProductIndex].quantity = newQuantity;
+        } else {
+          // Если количество становится 0, удаляем товар из корзины
+          updatedBasket.splice(existingProductIndex, 1);
+        }
+        return updatedBasket;
+      }
+      return prevBasket;
+    });
+  };
+
+  const increaseQuantity = (event, product) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setBasket((prevBasket) => {
+      const existingProductIndex = prevBasket.findIndex(
+        (item) =>
+          item.id_tovar === product.id_tovar && item.color === selectedColor,
+      );
+      if (existingProductIndex !== -1) {
+        const updatedBasket = [...prevBasket];
+        updatedBasket[existingProductIndex].quantity += 1;
+        return updatedBasket;
+      } else {
+        return [
+          ...prevBasket,
+          { ...product, quantity: 1, color: selectedColor },
+        ];
+      }
+    });
+  };
+
+  const getProductQuantity = (product) => {
+    const productInBasket = basket.find(
+      (item) =>
+        item.id_tovar === product.id_tovar && item.color === selectedColor,
+    );
+    return productInBasket ? productInBasket.quantity : 0;
+  };
+
+  const addToFavorites = (product, event) => {
+    favnotify();
+    event.stopPropagation();
+    event.preventDefault();
+    setFavoritesList((favoritesList) => [...favoritesList, product]);
+  };
+  const removeFromFavorites = (product, event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setFavoritesList((favoritesList) => {
+      const newFavoritesList = [...favoritesList];
+      const index = newFavoritesList.findIndex(
+        (item) => item.id_tovar === product.id_tovar,
+      );
+      if (index !== -1) {
+        newFavoritesList.splice(index, 1);
+      }
+      return newFavoritesList;
+    });
+  };
+  const checkProductFavorite = (product, event) => {
+    const productInFavorites = favoritesList.find(
+      (item) => item.id_tovar === product.id_tovar,
+    );
+    if (productInFavorites) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   useEffect(() => {
@@ -214,15 +347,27 @@ export default function ProductPage() {
               <div className={styles.product_name}>
                 {product.name_tovar}
                 <span className={styles.atricul__text}>#{productID}</span>
-                <FavoriteBorderIcon
-                  fontSize={"large"}
-                  className={styles.favorite__btn}
-                />
+                {checkProductFavorite(product) == false ? (
+                  <button
+                    className={styles.favorite__btn}
+                    onClick={(event) => addToFavorites(product, event)}
+                  >
+                    <FavoriteBorderIcon fontSize="large" />
+                  </button>
+                ) : (
+                  <button
+                    className={styles.favorite__button}
+                    onClick={(event) => removeFromFavorites(product, event)}
+                  >
+                    <FavoriteIcon fontSize="large" />
+                  </button>
+                )}
+                <ToastContainer />
               </div>
               <div className={styles.score__container}>
                 <StarIcon className={styles.star__icon} />
                 {product.score ? product.score : 0} | &nbsp;
-                <a href = "#score" className={styles.product_score__count}>
+                <a href="#score" className={styles.product_score__count}>
                   {product.scores_count ? product.scores_count : 0} отзывов
                 </a>
               </div>
@@ -251,40 +396,68 @@ export default function ProductPage() {
                 )}
               </div>
               <div className={styles.add_to_basket_btn__container}>
-                <button
-                  className={styles.add_to_basket__btn}
-                  onClick={() => {
-                    console.log(product.score);
-                  }}
-                >
-                  <ShoppingBasketIcon className={styles.basket__item} />{" "}
-                  Добавить в корзину
-                </button>
+                {getProductQuantity(product) == 0 ? (
+                  <>
+                    <button
+                      className={styles.add_to_basket__btn}
+                      onClick={(event) => addToCart(product, event)}
+                    >
+                      Добавить в корзину
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    className={styles.basket__control}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      event.preventDefault();
+                    }}
+                  >
+                    <div
+                      className={styles.increase__btn}
+                      onClick={(event) => decreaseQuantity(event, product)}
+                    >
+                      -
+                    </div>
+                    {getProductQuantity(product)}
+                    <div
+                      className={styles.decrease__btn}
+                      onClick={(event) => increaseQuantity(event, product)}
+                    >
+                      +
+                    </div>
+                  </div>
+                )}
               </div>
               <div className={styles.color_select__container}>
                 <p className={styles.color__text}>Цвет: {selectedColorBlur}</p>
                 <div className={styles.select_photo__container}>
                   {product.avaliable_colors ? (
-                    <ul className={styles.select_photo__list}
-                    onMouseLeave={()=>{
-                      setSelectedColorBlur(selectedColor)
-                     }}>
+                    <ul
+                      className={styles.select_photo__list}
+                      onMouseLeave={() => {
+                        setSelectedColorBlur(selectedColor);
+                      }}
+                    >
                       {product.avaliable_colors.map((color, index) => {
                         return (
                           <li key={index}>
-                            <a 
-                              onMouseEnter={()=>{
-                                setSelectedColorBlur(color)
-                               }}
-                             >
+                            <a
+                              onMouseEnter={() => {
+                                setSelectedColorBlur(color);
+                              }}
+                            >
                               <img
                                 className={`${styles.select__img} ${
-                                  selectedColor && selectedColor === color ? styles.active_color : ""
+                                  selectedColor && selectedColor === color
+                                    ? styles.active_color
+                                    : ""
                                 }`}
-                                
                                 src={product.pictures[0]}
                                 alt={`color-${index}`}
-                                onClick={()=>{setSelectedColor(color)}}
+                                onClick={() => {
+                                  setSelectedColor(color);
+                                }}
                               />
                             </a>
                           </li>
@@ -398,9 +571,7 @@ export default function ProductPage() {
                           <strong>
                             <p>Комментарий:</p>
                           </strong>
-                          <p>
-                            {item.comment}{" "}
-                          </p>
+                          <p>{item.comment} </p>
                         </div>
                       </li>
                     ))}

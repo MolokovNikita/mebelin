@@ -2,13 +2,13 @@ import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import config from "../config/config.js";
 const ResourceClient = axios.create({
-    baseURL: `${config.API_URL}`,
-    withCredentials: true,
-  });
-  const AuthClient = axios.create({
-    baseURL: `${config.API_URL}/auth`,
-    withCredentials: true,
-  });
+  baseURL: `${config.API_URL}`,
+  withCredentials: true,
+});
+const AuthClient = axios.create({
+  baseURL: `${config.API_URL}/auth`,
+  withCredentials: true,
+});
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
@@ -32,21 +32,22 @@ const AuthProvider = ({ children }) => {
     }, 5000);
   };
 
-//   const handleFetchProtected = () => {
-//     ResourceClient.get("/clients")
-//       .then((res) => {
-//         console.log(res);
-//       })
-//       .catch((e) => {
-//         console.log(e);
-//       });
-//   };
+  //   const handleFetchProtected = () => {
+  //     ResourceClient.get("/clients")
+  //       .then((res) => {
+  //         console.log(res);
+  //       })
+  //       .catch((e) => {
+  //         console.log(e);
+  //       });
+  //   };
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setIsLoading(true);
-      AuthClient
-        .post(`${config.API_URL}/auth/refresh`, null, { withCredentials: true })
+      AuthClient.post(`${config.API_URL}/auth/refresh`, null, {
+        withCredentials: true,
+      })
         .then((res) => {
           const { accessToken, accessTokenExpiration } = res.data;
           window.localStorage.setItem("accessToken", accessToken);
@@ -116,11 +117,11 @@ const AuthProvider = ({ children }) => {
         sessionStorage.setItem("userId", res.data.id);
         data[1]();
         setisAuth(true);
-        alert("Вы успешно зарегались!")
+        alert("Вы успешно зарегались!");
       })
       .catch((e) => {
         handleError(e.response.data);
-        alert("Произошла ошибка! - ",e.response.data);
+        alert("Произошла ошибка! - ", e.response.data);
       });
   };
   const handleSignIn = (data) => {
@@ -144,11 +145,11 @@ const AuthProvider = ({ children }) => {
         sessionStorage.setItem("userId", res.data.id);
         data[1]();
         setisAuth(true);
-        alert(`Привет, ${res.data.name_client}`)
+        alert(`Привет, ${res.data.name_client}`);
       })
       .catch((e) => {
         handleError(e.response.data);
-       alert('Произошла ошибка!', e.response.data);
+        alert("Произошла ошибка!", e.response.data);
       });
   };
 

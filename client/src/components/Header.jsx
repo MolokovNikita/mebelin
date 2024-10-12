@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { ProductsContext } from "../context/ProductsContext";
 import styles from "../styles/header.module.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -10,10 +11,12 @@ import { Link } from "react-router-dom";
 export default function Header(props) {
   const { setIsOpen } = props;
   const { handleLogOut, isAuth, userData } = useContext(AuthContext);
-  const handleClose = ()=>{
-    console.log('logout')
-  handleLogOut();
-  }
+  const { basket, favoritesList } = useContext(ProductsContext);
+
+  const handleClose = () => {
+    console.log("logout");
+    handleLogOut();
+  };
   return (
     <header>
       <div className={styles.top__header}>
@@ -62,46 +65,51 @@ export default function Header(props) {
               <Link to="/favorites">
                 <FavoriteBorderOutlinedIcon fontSize="large" />
                 Избранное
+                <div className={styles.favorites__counter}>
+                  {favoritesList.reduce((acc) => acc + 1, 0)}
+                </div>
               </Link>
             </li>
             <li className={styles.sign__item}>
-              
-               {isAuth? 
-               <>
-               <button className={styles.auth__block}> 
-               <AccountCircleOutlinedIcon fontSize="large" />
-               {userData.f_name}
-               </button>
-               <div className={styles.pop_up__bg}>
-                  <div className={styles.pop_up}>
-                    <ul className={styles.pop_up__list}>
-                      <li>
-                        Привет!
-                      </li>
-                      <li>
-                        Заказы
-                      </li>
-                      <li className={styles.logout__item} onClick={handleClose}>
-                        Выйти
-                      </li>
-                    </ul>
+              {isAuth ? (
+                <>
+                  <button className={styles.auth__block}>
+                    <AccountCircleOutlinedIcon fontSize="large" />
+                    {userData.f_name}
+                  </button>
+                  <div className={styles.pop_up__bg}>
+                    <div className={styles.pop_up}>
+                      <ul className={styles.pop_up__list}>
+                        <li>Привет!</li>
+                        <li>Заказы</li>
+                        <li
+                          className={styles.logout__item}
+                          onClick={handleClose}
+                        >
+                          Выйти
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-               </div>
-               </>:
-               <button
-               onClick={() => {
-                 setIsOpen(true);
-               }}
-             >
-               <AccountCircleOutlinedIcon fontSize="large" />
-               Войти
-             </button>
-               } 
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
+                  <AccountCircleOutlinedIcon fontSize="large" />
+                  Войти
+                </button>
+              )}
             </li>
             <li className={styles.basket__item}>
               <Link to="/basket">
                 <ShoppingBasketOutlinedIcon fontSize="large" />
                 Корзина
+                <div className={styles.basket__counter}>
+                  {basket.reduce((acc) => acc + 1, 0)}
+                </div>
               </Link>
             </li>
           </ul>

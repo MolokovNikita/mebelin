@@ -6,7 +6,7 @@ const { user } = require("pg/lib/defaults.js");
 class MainCategoryController {
   async create(req, res, next) {
     try {
-      const {name_main_category, route } = req.body;
+      const { name_main_category, route } = req.body;
       const sql_insert = `INSERT INTO main_category (name_main_category, route) VALUES
           ($1, $2)`;
       const values = [name_main_category, route];
@@ -38,8 +38,8 @@ class MainCategoryController {
     });
   }
   async getOne(req, res) {
-    const {name_main_category } = req.body;
-     const sql = "SELECT * FROM main_category WHERE name_main_category = $1";
+    const { name_main_category } = req.body;
+    const sql = "SELECT * FROM main_category WHERE name_main_category = $1";
     pool.query(sql, [name_main_category], (err, result) => {
       if (err) {
         console.error(err.message);
@@ -71,9 +71,10 @@ class MainCategoryController {
   async deleteOne(req, res) {
     const id_main_category = req.params.id;
     try {
-      const result = await pool.query(`SELECT id_main_category FROM main_category WHERE id_main_category = $1`, [
-        id_main_category,
-      ]);
+      const result = await pool.query(
+        `SELECT id_main_category FROM main_category WHERE id_main_category = $1`,
+        [id_main_category],
+      );
       if (result.rows.length === 0) {
         return res.status(400).send("Error: Client not found!");
       }
@@ -86,6 +87,5 @@ class MainCategoryController {
         .send("Error: Failed to delete the record! " + err.message);
     }
   }
-
 }
 module.exports = new MainCategoryController();

@@ -126,6 +126,31 @@
   font-size: 15px;
   transition: all 0.3s;
 }
+.basket__control {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #ffc314;
+  justify-content: space-around;
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 15px;
+  padding: 5px 20px;
+  align-items: center;
+}
+.increase__btn,
+.decrease__btn {
+  display: flex;
+  padding: 0 8px;
+  border-radius: 20px;
+  font-size: 20px;
+}
+.increase__btn {
+  padding: 0 9px;
+}
+.increase__btn:hover,
+.decrease__btn:hover {
+  background-color: #ffc314;
+}
 .favorites__button {
   position: absolute;
   top: 10px;
@@ -135,6 +160,20 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s;
+}
+.favorite__button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: red;
+}
+.favorite__button:hover {
+  color: rgb(154, 2, 2);
 }
 .favorites__button:hover {
   color: red;
@@ -248,14 +287,24 @@
   font-style: normal;
   font-size: 30px;
   padding: 0px 10px;
-  background-color: antiquewhite;
+  background-color: #ffc314;
   border-radius: 15px;
 }
 .back_btn button:hover {
-  background-color: rgb(248, 212, 165);
+  background-color: #f8d56d;
 }
 .product_desc__name {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 10px;
+}
+
+.toast_msg {
+  font-size: 15px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: black !important;
+  background-color: #ffc314 !important;
 }

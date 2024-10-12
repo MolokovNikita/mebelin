@@ -6,13 +6,13 @@ import { PiEye, PiEyeClosed } from "react-icons/pi";
 import { useLoginValidation } from "../../hooks/useLoginValidation.js";
 import { useValidation } from "../../hooks/useValidation.js";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContext  } from "../../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 const ModalRootElement = document.querySelector("#ModalAuth");
 
 export default function ModalAuth(props) {
   const { isOpen, onClose } = props;
-    const { handleSignIn, handleSignUp, erorText, setErrorText } =
-      useContext(AuthContext);
+  const { handleSignIn, handleSignUp, erorText, setErrorText } =
+    useContext(AuthContext);
   const [isLoginSelected, setIsLoginSelected] = useState(true);
   const element = useMemo(() => document.createElement("div"), []);
   const modalRef = useRef(null);
@@ -127,27 +127,27 @@ export default function ModalAuth(props) {
 
   if (!isOpen) return null;
 
-    const handleRegistration = (event) => {
-      event.preventDefault();
-      if (nameError || emailError || passwordError || passwordMatchError) {
-        return;
-      } else {
-        const f_name = name;
-        const pass = password;
-        handleSignUp([{ f_name, email, pass }, onClose]);
-      }
-    };
+  const handleRegistration = (event) => {
+    event.preventDefault();
+    if (nameError || emailError || passwordError || passwordMatchError) {
+      return;
+    } else {
+      const f_name = name;
+      const pass = password;
+      handleSignUp([{ f_name, email, pass }, onClose]);
+    }
+  };
 
-    const handleLogin = (event) => {
-      event.preventDefault();
-      if (loginEmailError || loginPasswordError) {
-        return;
-      } else {
-        const email = loginEmail;
-        const pass = loginPassword;
-        handleSignIn([{ email, pass }, onClose]);
-      }
-    };
+  const handleLogin = (event) => {
+    event.preventDefault();
+    if (loginEmailError || loginPasswordError) {
+      return;
+    } else {
+      const email = loginEmail;
+      const pass = loginPassword;
+      handleSignIn([{ email, pass }, onClose]);
+    }
+  };
 
   const handleBackgroundClick = () => {
     onClose();
@@ -336,9 +336,7 @@ export default function ModalAuth(props) {
               <div style={{ fontSize: "15px" }}>
                 Минимум 6 символов (букв или цифр)
               </div>
-              <div style={{ fontSize: "15px" }}>
-                Максимум 30 символов
-              </div>
+              <div style={{ fontSize: "15px" }}>Максимум 30 символов</div>
             </div>
             <div className={style.Password_area_container}>
               <div className={style.inputWrapper}>

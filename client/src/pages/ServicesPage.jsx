@@ -1,30 +1,14 @@
 import styles from "../styles/services.module.css";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import config from "../config/config";
+
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
   useEffect(() => {
-    console.log("Fetching");
-    const res = [
-      {
-        id: 1,
-        name: "Service 1",
-        description: "This is service 1",
-        price: 1000,
-      },
-      {
-        id: 2,
-        name: "Service 2",
-        description: "This is service 2",
-        price: 2000,
-      },
-      {
-        id: 3,
-        name: "Service 3",
-        description: "This is service 3",
-        price: 3000,
-      },
-    ];
-    setServices(res);
+    axios.get(`${config.API_URL}/service`).then((res) => {
+      setServices(res.data);
+    });
   }, []);
   return (
     <div className={styles.content__wrap}>

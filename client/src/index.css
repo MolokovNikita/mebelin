@@ -2,3 +2,7 @@
   margin: 0;
   padding: 0;
 }
+
+.Toastify__toast-container--top-right {
+  top: 130px !important; /* Сдвиг вниз на 70 пикселей (регулируйте под ваши нужды) */
+}

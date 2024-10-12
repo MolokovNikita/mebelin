@@ -18,17 +18,37 @@
   flex-direction: column;
   margin: auto;
   margin-top: 40px;
-  background-color: white;
-  padding: 20px;
   border-radius: 15px;
-}
-.services__list {
-  display: flex;
-  list-style: none;
-}
-.services__list li {
-  margin-right: 50px;
 }
 .service {
   display: flex;
+  width: 80%;
+  background-color: white;
+  margin: 0 auto;
+  padding: 10px;
+}
+.service:first-child {
+  border-radius: 10px 10px 0 0;
+}
+.service:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.services__list {
+  display: flex;
+  list-style: none;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 15px;
+}
+
+.services__list li {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.services__list li:first-child,
+.services__list li:last-child {
+  width: 25%;
 }

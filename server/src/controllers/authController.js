@@ -20,7 +20,7 @@ class AuthController {
         name_client,
         surname_client,
         phone_number,
-        patronymic_client
+        patronymic_client,
       } = await AuthService.signIn({
         email,
         pass,

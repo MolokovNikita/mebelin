@@ -97,7 +97,9 @@ export default function FavoritesPage() {
   return (
     <div className={styles.content__wrap}>
       <ToastContainer />
-      <p className={styles.favorite__title}>Товары, которые вам понравились</p>
+      <strong><p className={styles.favorite__title}>Товары, которые вам понравились</p></strong>
+      {favoritesList.length > 0 ?
+      <>
       <div className={styles.favorite_list_price__container}>
         <div className={styles.favorite__price}>
           В общем, вам понравилось товаров на сумму -{" "}
@@ -195,10 +197,20 @@ export default function FavoritesPage() {
                   </button>
                 )}
               </div>
-            </div>
+              </div>
           </Link>
         ))}
       </div>
+      </>:
+      <div className={styles.empty_fav__container}>
+       <h4 className={styles.empty_fav__title}>Вы не добавили товары в избранное</h4>
+            <p className={styles.empty_fav__text}>Найдите всё, что нужно в нашем каталоге</p>
+            <div className={styles.catalog_btn__container}>
+              <Link className={styles.catalog__btn} to="/catalog">
+                В каталог
+              </Link>
+            </div>
+      </div>}
     </div>
   );
 }

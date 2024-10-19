@@ -22,7 +22,9 @@ export default function BasketPage() {
       theme: "light",
       className: styles.toast_msg,
     });
-  const changeQuantity = (id, color, delta) => {
+  const changeQuantity = (event, id, color, delta) => {
+    event.stopPropagation();
+    event.preventDefault();
     setBasket((prevBasket) => {
       return prevBasket.map((item) =>
         item.id_tovar === id && item.color === color
@@ -32,7 +34,9 @@ export default function BasketPage() {
     });
   };
 
-  const removeProduct = (id, color) => {
+  const removeProduct = (event, id, color) => {
+    event.stopPropagation();
+    event.preventDefault();
     setBasket((prevBasket) =>
       prevBasket.filter((item) => item.id_tovar !== id || item.color !== color),
     );
@@ -53,7 +57,8 @@ export default function BasketPage() {
 
   const totalPrice = calculateTotalPrice();
 
-  const toggleSelect = (id, color) => {
+  const toggleSelect = (event, id, color) => {
+    event.stopPropagation();
     setBasket((prevBasket) =>
       prevBasket.map((item) =>
         item.id_tovar === id && item.color === color
@@ -102,16 +107,24 @@ export default function BasketPage() {
           <>
             <div className={styles.basket__container}>
               {basket.map((product) => (
+               <div key={product.id_tovar + product.color}>
+                <Link
+                to={`/catalog/${product.type_tovara}/${product.id_tovar}`}
+                
+
+              >
                 <div
-                  key={product.id_tovar + product.color}
                   className={styles.basket__block}
                 >
                   <input
                     type="checkbox"
                     checked={product.selected || false}
-                    onChange={() =>
-                      toggleSelect(product.id_tovar, product.color)
+                    onChange={(event) =>
+                      toggleSelect(event, product.id_tovar, product.color)
                     }
+                    onClick={(event)=>{   
+                      event.stopPropagation();
+                      }}
                     className={styles.product__checkbox}
                   />
                   <img
@@ -134,8 +147,8 @@ export default function BasketPage() {
                     <div className={styles.product__quantity_controls}>
                       <div className={styles.product__quantity_btn}>
                         <button
-                          onClick={() =>
-                            changeQuantity(product.id_tovar, product.color, -1)
+                          onClick={(event) =>
+                            changeQuantity(event, product.id_tovar, product.color, -1)
                           }
                           className={styles.quantity_btn}
                         >
@@ -145,8 +158,8 @@ export default function BasketPage() {
                           {product.quantity}
                         </span>
                         <button
-                          onClick={() =>
-                            changeQuantity(product.id_tovar, product.color, 1)
+                          onClick={(event) =>
+                            changeQuantity(event, product.id_tovar, product.color, 1)
                           }
                           className={styles.quantity_btn}
                         >
@@ -180,8 +193,8 @@ export default function BasketPage() {
 
                     <div className={styles.product_info__buttons}>
                       <button
-                        onClick={() =>
-                          removeProduct(product.id_tovar, product.color)
+                        onClick={(event) =>
+                          removeProduct(event, product.id_tovar, product.color)
                         }
                         className={styles.remove__btn}
                       >
@@ -207,11 +220,21 @@ export default function BasketPage() {
                     </div>
                   </div>
                 </div>
+                </Link>
+                     </div>   
               ))}
             </div>
             <div className={styles.basket_total__info}>
               Итого: <strong>{totalPrice} ₽</strong>
-              <button className={styles.buy__btn}>Оформить заказ</button>
+              <button onClick={()=>{
+                if(totalPrice){
+                  setBasket([]);
+                  alert('Вы успешно оформили заказ!');
+                }
+                else{
+                  return;
+                }
+                }} className={styles.buy__btn}>Оформить заказ</button>
             </div>
           </>
         ) : (

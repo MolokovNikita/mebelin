@@ -231,7 +231,7 @@ export default function ModalAuth(props) {
             {loginPasswordDirty && loginPasswordError && (
               <div className={style.Error_area}>{loginPasswordError}</div>
             )}
-            <div className={style.FortgotPass_container}>
+            {/* <div className={style.FortgotPass_container}>
               <a
                 onClick={() => {
                   onClose();
@@ -240,7 +240,7 @@ export default function ModalAuth(props) {
               >
                 Забыли пароль ?
               </a>
-            </div>
+            </div> */}
             <div className={style.LoginBtn_container}>
               <button
                 disabled={!loginFormValid}

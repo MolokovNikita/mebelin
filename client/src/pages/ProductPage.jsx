@@ -14,6 +14,8 @@ import axios from "axios";
 import config from "../config/config";
 import { Link } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
+import { AuthContext } from "../context/AuthContext";
+import ReviewPopUp from "../components/ReviewPopUp";
 
 export default function ProductPage() {
   const location = useLocation();
@@ -25,8 +27,10 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedColorBlur, setSelectedColorBlur] = useState("");
   const [error, setError] = useState(false);
+  const [isReviewPopUpOpen, setIsReviewPopUpOpen] = useState(false);
   const { basket, setBasket, favoritesList, setFavoritesList } =
     useContext(ProductsContext);
+    const { isAuth, userData } = useContext(AuthContext);
 
   useEffect(() => {
     axios.get(`${config.API_URL}/type-tovara`).then((res) => {
@@ -285,6 +289,12 @@ export default function ProductPage() {
       }
     }
   }, [category, categoryName]);
+  const handleLeaveReview = () =>{
+    if(!isAuth) {
+      alert('Вы не авториованы!');
+      return;}
+      setIsReviewPopUpOpen(true);
+  }
   // useEffect(()=>{
   //   if(error)
   //      <Navigate to="/catalog" />;
@@ -535,10 +545,12 @@ export default function ProductPage() {
                 <p className={styles.scores__count}>
                   Кол-во оценок: {product.scores ? product.scores.length : 0}
                 </p>
-                <button className={styles.leave_review__btn}>
+                <button className={styles.leave_review__btn}
+                onClick={handleLeaveReview}>
                   {" "}
                   Оставить отзыв
                 </button>
+                {isReviewPopUpOpen ? <ReviewPopUp productId = {productID} onClose = {()=>{setIsReviewPopUpOpen(false)}} /> : null}
               </div>
             </div>
             <div className={styles.main_scores__container}>

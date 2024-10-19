@@ -21,21 +21,21 @@ export default function Header(props) {
     <header>
       <div className={styles.top__header}>
         <div className={styles.top_left__container}>
-          <p className={styles.city__label}>
+          {/* <p className={styles.city__label}>
             <a href="#">
               <FmdGoodOutlinedIcon fontSize="small" />
               г. Москва
             </a>{" "}
-          </p>
+          </p> */}
         </div>
         <div className={styles.top_right__container}>
           <ul className={styles.top_right__list}>
-            <li>
+            {/* <li>
               <a href="#">Магазины</a>
             </li>
             <li>
               <a href="#">Доставка</a>
-            </li>
+            </li> */}
             <li>
               <a href="#">+7 495 362-72-86</a>
             </li>

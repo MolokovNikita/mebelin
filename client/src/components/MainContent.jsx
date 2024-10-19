@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "../styles/main-content.module.css";
 export default function MainContent() {
   const [faqOpen, setFaqOpen] = useState([false, false, false]);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const toggleFaq = (index) => {
     const newFaqOpen = [...faqOpen];
@@ -20,7 +21,24 @@ export default function MainContent() {
             <p className={styles.first_topic_secondary__text}>
               Мебель от фабрики - качество и стиль
             </p>
-            <button className={styles.submit__btn}>Оставить заявку</button>
+            <button onClick={()=>{setIsPopUpOpen(true)}} className={styles.submit__btn}>Оставить заявку</button>
+            {isPopUpOpen ? 
+              <div className={styles.popup__container}>
+                <div className={styles.popup__content}>
+                  <div className={styles.popup__close}>
+                    <button onClick={()=>{setIsPopUpOpen(false)}} className={styles.close__btn}>
+                    <img src="/close.png" alt="close" className={styles.closeImage} />
+                    </button>
+                  </div>
+                      <form className={styles.popup__form}>
+                        <input type="text" placeholder="Ваше имя" className={styles.popup__input}/>
+                        <input type="tel" placeholder="Ваш номер телефона" className={styles.popup__input}/>
+                        <button className={styles.popup__submit}>Оставить заявку</button>
+                      </form>
+                      </div>
+                      </div>
+             : null}
+
             <div className={styles.topic_block__container}>
               <div className={styles.first_block__info}>
                 <p>

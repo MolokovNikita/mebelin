@@ -208,3 +208,35 @@
   color: black !important;
   background-color: #ffc314 !important;
 }
+
+.catalog_btn__container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.catalog__btn {
+  display: flex;
+  background-color: #ffc314;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 20px;
+}
+.catalog__btn:hover {
+  background-color: #f8d56d;
+}
+.empty_fav__container
+{
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center;
+margin-top: 20px;
+}
+.empty_fav__text{
+  font-size: 20px;
+}
+.empty_fav__title
+  {
+    font-size: 25px;
+
+  }
